@@ -1,7 +1,14 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHh Lpr lff">
+    <q-header elevated dark>
       <q-toolbar>
+        <q-img
+          src="../assets/AALogo.png"
+          style="width: 25px"
+        />
+        <q-toolbar-title>
+          Asset Alchemy
+        </q-toolbar-title>
         <q-btn
           flat
           dense
@@ -10,32 +17,41 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
     >
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+        <q-item to="/spritesheet" clickable v-ripple>
+          <q-item-section avatar>
+            <q-icon name="view_quilt" />
+          </q-item-section>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+          <q-item-section>
+            Sprite sheet
+          </q-item-section>
+        </q-item>
+        <q-item to="/bitmapfont" clickable v-ripple>
+          <q-item-section avatar>
+            <q-icon name="text_fields" />
+          </q-item-section>
+
+          <q-item-section>
+            Bitmap font
+          </q-item-section>
+        </q-item>
+        <q-item to="/particles" clickable v-ripple>
+          <q-item-section avatar>
+            <q-icon name="blur_on" />
+          </q-item-section>
+
+          <q-item-section>
+            Particle system
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -53,50 +69,6 @@ defineOptions({
   name: 'MainLayout'
 });
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
 
 const leftDrawerOpen = ref(false);
 
