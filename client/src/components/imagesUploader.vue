@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, toRaw } from 'vue';
 import ImageFile from "components/imageFile.vue";
 import {IImageFile} from "src/interfaces/imageFile";
 
@@ -9,6 +9,7 @@ function onDrop(e) {
 }
 
 const events = ['dragenter', 'dragover', 'dragleave', 'drop']
+const emit = defineEmits(['update']);
 let active = ref(false)
 let files: Array<IImageFile> = ref([])
 let fileInput = ref(null);
@@ -19,6 +20,7 @@ function addBtn(){
 
 function cleanBtn(){
   files.value = [];
+  emit('update', toRaw(files.value));
 }
 
 function fromInput(e){
@@ -32,8 +34,10 @@ function addImageFile(file: File){
       name: file.name,
       type: file.type,
       id: new Date().getTime().toString(),
-      url: URL.createObjectURL(file)
+      url: URL.createObjectURL(file),
+      file: file
     })
+    emit('update', toRaw(files.value));
   }
 }
 
@@ -41,6 +45,7 @@ function removeImage(name){
   const fileIndex = files.value.findIndex(f => f.name === name);
   if(fileIndex>=0){
     files.value.splice(fileIndex,1);
+    emit('update', toRaw(files.value));
   }
 }
 
@@ -104,7 +109,7 @@ onUnmounted(() => {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    height: 500px;
+    height: 70vh;
     padding: 10px;
     background-color: #dcdcdc;
     overflow-y:scroll;
