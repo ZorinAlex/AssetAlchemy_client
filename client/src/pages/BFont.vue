@@ -11,6 +11,10 @@ const name: string = ref('');
 const format: string = ref(ESpriteSheet.PNG);
 const size: number = ref(25);
 const lineHeight: number = ref(25);
+const maxSheetWidth: number = ref(1024);
+const maxSheetHeight: number = ref(1024);
+const scale: number = ref(1);
+const quality: number = ref(100);
 
 let images: Array<IImageChar> = ref([])
 
@@ -48,6 +52,10 @@ async function pack(){
   formData.append('size', size.value);
   formData.append('lineHeight', lineHeight.value);
   formData.append('data', JSON.stringify(data))
+  formData.append('maxSheetWidth', maxSheetWidth.value);
+  formData.append('maxSheetHeight', maxSheetHeight.value);
+  formData.append('scale', scale.value);
+  formData.append('quality', quality.value);
   try {
     const response = await axios.post('http://localhost:3100/packer/bfont', formData, {
       headers: {
@@ -84,22 +92,21 @@ async function pack(){
     </div>
   </div>
   <div class="row">
+    <div class="col-md-3 col-sm-6">
       <q-input
-        class="col-md-3 col-sm-6"
         filled
         v-model="name"
         label="font name"
       />
       <q-select
-        class="col-md-3 col-sm-6"
         filled
         v-model="format"
         :options="Object.values(ESpriteSheet)"
         label="format"
       />
-
+    </div>
+    <div class="col-md-3 col-sm-6">
       <q-input
-        class="col-md-3 col-sm-6"
         v-model.number="size"
         type="number"
         label="size"
@@ -107,13 +114,45 @@ async function pack(){
       >
       </q-input>
       <q-input
-        class="col-md-3 col-sm-6"
         v-model.number="lineHeight"
         type="number"
         label="line height"
         filled
       >
       </q-input>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <q-input
+        v-model.number="maxSheetWidth"
+        type="number"
+        label="max width"
+        filled
+      >
+      </q-input>
+      <q-input
+        v-model.number="maxSheetHeight"
+        type="number"
+        label="max height"
+        filled
+      >
+      </q-input>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <q-input
+        v-model.number="scale"
+        type="number"
+        label="scale"
+        filled
+      >
+      </q-input>
+      <q-input
+        v-model.number="quality"
+        type="number"
+        label="quality"
+        filled
+      >
+      </q-input>
+    </div>
   </div>
   <div class="row q-pa-sm flex justify-end">
     <q-btn
@@ -128,29 +167,32 @@ async function pack(){
 </template>
 
 <style scoped lang="scss">
-.charmap{
+.charmap {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
   padding: 5px;
   background-color: #dcdcdc;
-  overflow-y:scroll;
+  overflow-y: scroll;
   position: relative;
   align-content: flex-start;
   height: 20vh;
 }
-.charmap__head{
+
+.charmap__head {
   color: white;
   padding: 5px;
   font-size: 16px;
 }
-.charmap__item{
+
+.charmap__item {
   display: flex;
   flex-direction: row;
 }
-  .charmap__image{
-    width: 30px;
-    height: 30px;
-  }
+
+.charmap__image {
+  width: 30px;
+  height: 30px;
+}
 </style>

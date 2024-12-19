@@ -18,6 +18,7 @@ const allowRotation: boolean = ref(true);
 const tag: boolean = ref(false);
 const border: number = ref(0);
 const scale: number = ref(1);
+const quality: number = ref(100);
 
 let images: Array<IImageFile> = ref([])
 
@@ -38,6 +39,7 @@ async function pack(){
   formData.append('tag', tag.value);
   formData.append('border', border.value);
   formData.append('scale', scale.value);
+  formData.append('quality', quality.value);
 
   try {
     const response = await axios.post('http://localhost:3100/packer/pack', formData, {
@@ -106,16 +108,32 @@ function handleUpdate(data) {
       </q-input>
     </div>
     <div class="col-md-3 col-sm-6">
-      <q-input
-        v-model.number="scale"
-        type="number"
-        label="images scale"
-        filled
-      >
-        <q-tooltip anchor="top middle" self="bottom middle">
-          Images scale
-        </q-tooltip>
-      </q-input>
+      <div class="row">
+        <div class="col">
+          <q-input
+            v-model.number="scale"
+            type="number"
+            label="images scale"
+            filled
+          >
+            <q-tooltip anchor="top middle" self="bottom middle">
+              Images scale
+            </q-tooltip>
+          </q-input>
+        </div>
+        <div class="col">
+          <q-input
+            v-model.number="quality"
+            type="number"
+            label="images quality"
+            filled
+          >
+            <q-tooltip anchor="top middle" self="bottom middle">
+              Images quality
+            </q-tooltip>
+          </q-input>
+        </div>
+      </div>
       <div class="row">
         <div class="col">
           <q-input
