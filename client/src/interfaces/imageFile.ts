@@ -5,3 +5,8 @@ export interface IImageFile {
   url: string,
   file: File
 }
+
+export interface IImageChar{
+  image: IImageFile,
+  char: string
+}

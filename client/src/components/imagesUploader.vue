@@ -3,6 +3,10 @@ import { ref, onMounted, onUnmounted, toRaw } from 'vue';
 import ImageFile from "components/imageFile.vue";
 import {IImageFile} from "src/interfaces/imageFile";
 
+const props = defineProps({
+  height: { type: String, default: '100vh' }
+})
+
 function onDrop(e) {
   setInactive();
   [...e.dataTransfer.files].forEach(file=> addImageFile(file))
@@ -84,6 +88,7 @@ onUnmounted(() => {
     class="images-uploader__body"
     :class="{ 'images-uploader__body--active': active }"
     ref="dropzone"
+    :style="{height:props.height}"
     @drop.prevent="onDrop"
     @dragenter.prevent="setActive"
     @dragover.prevent="setActive"
@@ -109,7 +114,6 @@ onUnmounted(() => {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    height: 70vh;
     padding: 10px;
     background-color: #dcdcdc;
     overflow-y:scroll;

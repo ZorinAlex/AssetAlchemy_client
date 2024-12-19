@@ -14,6 +14,7 @@
     <q-img
       :src="file.url"
       class="image-file__image"
+      fit="contain"
     >
       <div class="image-file__text">
         {{ file.name }}
