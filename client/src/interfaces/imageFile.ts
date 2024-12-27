@@ -10,3 +10,8 @@ export interface IImageChar{
   image: IImageFile,
   char: string
 }
+
+export interface IBehaviorUpdate{
+  behavior: Object,
+  active: boolean
+}

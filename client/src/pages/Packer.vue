@@ -70,7 +70,7 @@ function handleUpdate(data) {
 </script>
 
 <template>
-  <images-uploader height="70vh" @update="handleUpdate"/>
+  <images-uploader height="70vh" @update="handleUpdate" title="images for pack"/>
   <div class="row">
     <div class="col-md-3 col-sm-6">
       <q-input

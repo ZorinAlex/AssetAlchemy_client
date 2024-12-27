@@ -80,7 +80,7 @@ async function pack(){
 </script>
 
 <template>
-  <images-uploader height="25vh" @update="handleUpdate"/>
+  <images-uploader height="25vh" @update="handleUpdate" title="images for font"/>
   <div class="bg-grey-9 charmap__head">Image to char map</div>
   <div class="charmap">
     <div v-for="image of images" class="charmap__item">

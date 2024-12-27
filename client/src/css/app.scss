@@ -1,1 +1,19 @@
 // app global css in SCSS form
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: $gray;
+  outline: 1px solid darkgrey;
+  border-radius: 3px;
+}
+
+.q-item__section--side {
+  padding: 0;
+}
+
+.border-bottom_list__item{
+  border-bottom: 1px solid $gray;
+  margin-bottom: 5px;
+}

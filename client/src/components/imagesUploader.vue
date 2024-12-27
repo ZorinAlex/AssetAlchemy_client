@@ -4,7 +4,8 @@ import ImageFile from "components/imageFile.vue";
 import {IImageFile} from "src/interfaces/imageFile";
 
 const props = defineProps({
-  height: { type: String, default: '100vh' }
+  height: { type: String, default: '100vh' },
+  title: {type: String}
 })
 
 function onDrop(e) {
@@ -78,7 +79,7 @@ onUnmounted(() => {
 <template>
 <div class="images-uploader">
   <div class="images-uploader__head bg-grey-9">
-    <div class="images-uploader__head_text">Images for pack: {{files.length}}</div>
+    <div class="images-uploader__head_text">{{title}}: {{files.length}}</div>
     <q-space></q-space>
     <q-btn flat dense icon="add" class="text-white" @click="addBtn"/>
     <q-btn flat dense icon="clear_all" class="text-white" @click="cleanBtn"/>
@@ -128,7 +129,8 @@ onUnmounted(() => {
     left: 50%;
     transform: translate(-50%, -50%);
     position: absolute;
-    font-size: 40px;
+    font-size: 30px;
+    text-align: center;
     font-weight: bold;
     color: #afafaf;
     user-select: none;

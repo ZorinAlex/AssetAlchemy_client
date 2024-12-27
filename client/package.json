@@ -11,10 +11,12 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@pixi/particle-emitter": "^5.0.8",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
     "lodash": "^4.17.21",
     "pinia": "^2.0.11",
+    "pixi.js": "^7.4.2",
     "quasar": "^2.16.0",
     "vue": "^3.4.18",
     "vue-router": "^4.0.12"
