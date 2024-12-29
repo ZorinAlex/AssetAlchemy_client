@@ -3,8 +3,13 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const alpha = ref(1);
-const active = ref(true)
+const props = defineProps({
+  data: { type: Object, required: false }
+})
+
+const active = ref(!!props.data)
+
+const alpha = ref(props.data?.config?.alpha);
 
 function update(){
   const behavior = getBehaviour(EBehaviours.ALPHA_STATIC, {

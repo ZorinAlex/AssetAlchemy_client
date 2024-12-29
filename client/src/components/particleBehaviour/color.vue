@@ -3,12 +3,12 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const list = ref([
-  { value: '#ff0000', time: 0 },
-  { value: '#ffc400', time: 1 },
-]);
+const props = defineProps({
+  data: { type: Object, required: false }
+})
 
-const active = ref(true)
+const list = ref(props.data?.config?.color?.list);
+const active = ref(!!props.data)
 
 function checkLastTime(){
   const last = list.value.at(-1)
@@ -88,7 +88,6 @@ function update(){
               </q-input>
             </div>
           </div>
-
         </div>
         <div class="flex q-mb-sm">
           <q-btn color="primary" size="sm" label="add color" style="margin: auto" @click="add"/>

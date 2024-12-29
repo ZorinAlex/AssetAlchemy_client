@@ -94,23 +94,23 @@
 
       </div>
       <div class="col-3 behavior__panel">
-        <color @update="updateBehavior"/>
-        <color-static @update="updateBehavior" />
-        <alpha @update="updateBehavior" />
-        <alpha-static @update="updateBehavior" />
-        <scale @update="updateBehavior" />
-        <scale-static @update="updateBehavior" />
-        <rotation @update="updateBehavior" />
-        <rotation-static @update="updateBehavior" />
-        <rotation-no @update="updateBehavior" />
-        <move-speed @update="updateBehavior" />
-        <move-speed-static @update="updateBehavior" />
-        <move-acceleration @update="updateBehavior" />
-        <move-path @update="updateBehavior" />
-        <blend-mode @update="updateBehavior"/>
-        <spawn-burst @update="updateBehavior"/>
-        <spawn-shape @update="updateBehavior"/>
-        <texture-single :textures="images" @update="updateBehavior"/>
+        <color @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR)"/>
+        <color-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR_STATIC)"/>
+        <alpha @update="updateBehavior" :data="getBehaviourData(EBehaviours.ALPHA)"/>
+        <alpha-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.ALPHA_STATIC)"/>
+        <scale @update="updateBehavior" :data="getBehaviourData(EBehaviours.SCALE)"/>
+        <scale-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.SCALE_STATIC)"/>
+        <rotation @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION)"/>
+        <rotation-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION_STATIC)"/>
+        <rotation-no @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION_NO)"/>
+        <move-speed @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_SPEED)"/>
+        <move-speed-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_SPEED_STATIC)"/>
+        <move-acceleration @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_ACCELERATION)"/>
+        <move-path @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_PATH)"/>
+        <blend-mode @update="updateBehavior" :data="getBehaviourData(EBehaviours.BLEND_MODE)"/>
+        <spawn-burst @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_BURST)"/>
+        <spawn-shape @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_SHAPE)"/>
+        <texture-single :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.TEXTURE_SINGLE)"/>
         <texture-random :textures="images" @update="updateBehavior"/>
         <texture-ordered :textures="images" @update="updateBehavior"/>
         <animated-single :textures="images" @update="updateBehavior"/>
@@ -121,9 +121,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, toRaw } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import * as PIXI from 'pixi.js';
-import { behaviors, Emitter } from '@pixi/particle-emitter';
+import { Emitter } from '@pixi/particle-emitter';
 import Color from 'components/particleBehaviour/color.vue';
 import { IBehaviorUpdate, IImageFile } from 'src/interfaces/imageFile';
 import ColorStatic from 'components/particleBehaviour/colorStatic.vue';
@@ -147,7 +147,8 @@ import TextureRandom from 'components/particleBehaviour/textureRandom.vue';
 import TextureOrdered from 'components/particleBehaviour/textureOrdered.vue';
 import AnimatedSingle from 'components/particleBehaviour/animatedSingle.vue';
 import AnimatedRandom from 'components/particleBehaviour/animatedRandom.vue';
-import { getTextureFromImage } from 'src/utils/particlesUtils';
+import { EBehaviours, getTextureFromImage } from 'src/utils/particlesUtils';
+import { find } from 'lodash';
 
 const pixiContainer = ref<HTMLDivElement | null>(null);
 let app: PIXI.Application | null = null;
@@ -197,11 +198,11 @@ let particleBehaviors: Array<any> = [
       color: {
         list: [
           {
-            value: 'fb1010',
+            value: '#fb1010',
             time: 0,
           },
           {
-            value: 'f5b830',
+            value: '#f5b830',
             time: 1,
           },
         ],
@@ -334,6 +335,11 @@ function downloadJson(){
 
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function getBehaviourData(name: EBehaviours){
+  const data = find(particleBehaviors, beh=>beh.type === name)
+  return data
 }
 
 onMounted(() => {

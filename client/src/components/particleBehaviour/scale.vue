@@ -3,15 +3,19 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const list = ref([
+const props = defineProps({
+  data: { type: Object, required: false }
+})
+
+const active = ref(!!props.data)
+const def = [
   { value: 1, time: 0 },
   { value: 0.5, time: 1 },
-]);
+];
 
-const minMult = ref(0.5)
-const isStepped = ref(true)
-
-const active = ref(true)
+const list = ref(props.data?.config?.scale?.list || def)
+const minMult = ref(props.data?.config?.minMult || 0.5)
+const isStepped = ref(props.data?.config?.scale?.isStepped || true)
 
 function checkLastTime(){
   const last = list.value.at(-1)

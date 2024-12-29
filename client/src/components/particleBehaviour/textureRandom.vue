@@ -6,11 +6,12 @@ import { Texture } from 'pixi.js';
 const emit = defineEmits(['update']);
 
 const images = ref([]);
-const active = ref(true);
 
 const props = defineProps({
   textures: { type: Array },
+  data: { type: Object, required: false },
 });
+const active = ref(!!props.data)
 
 function update() {
   const imagesWithUrl = images.value.filter(val => val.url);

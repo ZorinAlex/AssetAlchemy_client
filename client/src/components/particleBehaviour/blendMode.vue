@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ref, toRaw } from 'vue';
 import { allBlendModes, EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
+import { BlendModeBehavior } from '@pixi/particle-emitter/lib/behaviors';
 const emit = defineEmits(['update'])
 
-const blendMode = ref('multiply');
-const active = ref(true)
+const props = defineProps({
+  data: { type: Object, required: false }
+})
+
+const active = ref(!!props.data)
+
+const blendMode = ref(props.data?.config?.blendMode|| 'normal');
 
 function update(){
   const behavior = getBehaviour(EBehaviours.BLEND_MODE, {

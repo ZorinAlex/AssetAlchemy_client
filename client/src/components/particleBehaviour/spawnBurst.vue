@@ -3,12 +3,15 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const spacing = ref(90);
-const start = ref(0);
-const distance = ref(40);
+const props = defineProps({
+  data: { type: Object, required: false }
+})
 
+const active = ref(!!props.data)
+const spacing = ref(props.data?.config?.spacing || 90);
+const start = ref(props.data?.config?.start || 0);
+const distance = ref(props.data?.config?.distance || 40);
 
-const active = ref(true)
 
 function update(){
   const behavior = getBehaviour(EBehaviours.SPAWN_BURST, {

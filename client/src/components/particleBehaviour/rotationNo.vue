@@ -3,8 +3,12 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const value = ref(0);
-const active = ref(true)
+const props = defineProps({
+  data: { type: Object, required: false }
+})
+
+const active = ref(!!props.data)
+const value = ref(props.data?.config?.rotation || 0);
 
 function update(){
   const behavior = getBehaviour(EBehaviours.ROTATION_NO, {

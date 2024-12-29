@@ -3,14 +3,19 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const list = ref([
+const def = [
   { value: 10, time: 0 },
   { value: 100, time: 5 },
-]);
+];
 
-const minMult = ref(0.5)
-const path = ref("round(sin(x) * 2)")
-const active = ref(true)
+const props = defineProps({
+  data: { type: Object, required: false }
+})
+
+const active = ref(!!props.data)
+const minMult = ref(props.data?.config?.minMult || 1)
+const path = ref(props.data?.config?.path || "round(sin(x) * 2)")
+const list = ref(props.data?.config?.speed?.list || def)
 
 function checkLastTime(){
   const last = list.value.at(-1)

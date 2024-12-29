@@ -3,8 +3,12 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const color = ref('#00ff00');
-const active = ref(true)
+const props = defineProps({
+  data: { type: Object, required: false }
+})
+
+const color = ref(props.data?.config?.color);
+const active = ref(!!props.data)
 
 function update(){
   const behavior = getBehaviour(EBehaviours.COLOR_STATIC, {
@@ -50,7 +54,6 @@ function update(){
             </q-input>
           </div>
         </div>
-
       </q-card>
     </q-expansion-item>
 

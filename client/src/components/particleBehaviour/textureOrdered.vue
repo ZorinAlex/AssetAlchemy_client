@@ -4,13 +4,14 @@ import { EBehaviours, getBehaviour, getTextureFromImage } from 'src/utils/partic
 import { Texture } from 'pixi.js';
 
 const emit = defineEmits(['update']);
-
-const images = ref([]);
-const active = ref(true);
-
 const props = defineProps({
+  data: { type: Object, required: false },
   textures: { type: Array },
-});
+})
+
+const active = ref(!!props.data)
+const images = ref([]);
+
 
 function update() {
   const imagesWithUrl = images.value.filter(val => val.url);

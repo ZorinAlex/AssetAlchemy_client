@@ -4,17 +4,21 @@ import { allBlendModes, EBehaviours, EShape, getBehaviour } from 'src/utils/part
 
 const emit = defineEmits(['update']);
 
-const x = ref(0);
-const y = ref(0);
-const width = ref(40);
-const height = ref(40);
-const radius = ref(20);
-const minR = ref(10)
-const affectRotation = ref(true)
-const shapes = Object.values(EShape);
-const shape = ref(EShape.CIRCLE);
+const props = defineProps({
+  data: { type: Object, required: false }
+})
 
-const active = ref(true);
+const active = ref(!!props.data)
+
+const x = ref(props.data?.config?.data?.x || 0);
+const y = ref(props.data?.config?.data?.y ||0);
+const width = ref(props.data?.config?.data?.w ||40);
+const height = ref(props.data?.config?.data?.h ||40);
+const radius = ref(props.data?.config?.data?.radius ||20);
+const minR = ref(props.data?.config?.data?.innerRadius ||10)
+const affectRotation = ref(props.data?.config?.data?.affectRotation || true)
+const shapes = Object.values(EShape);
+const shape = ref(props.data?.config?.type || EShape.CIRCLE);
 
 function update() {
   let config = {

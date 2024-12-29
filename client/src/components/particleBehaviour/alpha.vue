@@ -3,15 +3,15 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const list = ref([
-  { value: 1, time: 0 },
-  { value: 0, time: 1 },
-]);
+const props = defineProps({
+  data: { type: Object, required: false }
+})
 
-const active = ref(true)
+const active = ref(!!props.data)
+const list = ref(props.data?.config?.alpha?.list);
 
 function checkLastTime(){
-  const last = list.value.at(-1)
+  const last = list.value?.at(-1)
   if(last.time<1){
     last.time = 1
   }

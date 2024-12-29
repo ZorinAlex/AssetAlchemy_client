@@ -3,14 +3,16 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const valueMinStart = ref(0);
-const valueMaxStart = ref(180);
-const valueMinSpeed = ref(30);
-const valueMaxSpeed  = ref(45);
-const accel  = ref(20);
+const props = defineProps({
+  data: { type: Object, required: false }
+})
 
-
-const active = ref(true)
+const active = ref(!!props.data)
+const valueMinStart = ref(props.data?.config?.minStart || 0);
+const valueMaxStart = ref(props.data?.config?.maxStart || 180);
+const valueMinSpeed = ref(props.data?.config?.minSpeed || 30);
+const valueMaxSpeed  = ref(props.data?.config?.maxSpeed || 45);
+const accel  = ref(props.data?.config?.accel || 20);
 
 function update(){
   const behavior = getBehaviour(EBehaviours.ROTATION, {

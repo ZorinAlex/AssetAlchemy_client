@@ -1,13 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { EBehaviours, getBehaviour, getTextureFromImage } from 'src/utils/particlesUtils';
+import { IImageFile } from 'src/interfaces/imageFile';
 const emit = defineEmits(['update'])
 
 const texture = ref();
-const active = ref(true)
 
 const props = defineProps({
-  textures: { type: Array},
+  textures: { type: Array<IImageFile> },
+  data: { type: Object, required: false },
+})
+const active = ref(!!props.data)
+
+const inputData = ref(props.data)
+
+watch(() => props.data, (newData, oldData)=>{
+  if(!newData.filename){
+    console.log('OIGOIGOIGOOGOIGOGI');
+  }
+  console.log(newData);
+  console.log(oldData);
+}, {deep: true})
+
+onMounted(()=>{
+  console.log(inputData.value);
 })
 
 function update(){

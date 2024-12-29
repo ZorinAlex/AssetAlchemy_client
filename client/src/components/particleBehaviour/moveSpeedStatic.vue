@@ -3,9 +3,13 @@ import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour } from 'src/utils/particlesUtils';
 const emit = defineEmits(['update'])
 
-const valueMin = ref(100);
-const valueMax = ref(150);
-const active = ref(true)
+const props = defineProps({
+  data: { type: Object, required: false }
+})
+
+const active = ref(!!props.data)
+const valueMin = ref(props.data?.config?.min || 100);
+const valueMax = ref(props.data?.config?.max ||150);
 
 function update(){
   const behavior = getBehaviour(EBehaviours.MOVE_SPEED_STATIC, {

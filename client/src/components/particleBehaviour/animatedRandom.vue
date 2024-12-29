@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, toRaw } from 'vue';
 import { EBehaviours, getBehaviour, getTextureFromImage } from 'src/utils/particlesUtils';
-import { Texture } from 'pixi.js';
 import { forEach } from 'lodash';
 
 const emit = defineEmits(['update']);
+const props = defineProps({
+  textures: { type: Array },
+  data: { type: Object, required: false }
+});
 
 const anims = ref([{
   images: [],
@@ -12,11 +15,9 @@ const anims = ref([{
   loop: true
 }]);
 
-const active = ref(true);
+const active = ref(!!props.data);
 
-const props = defineProps({
-  textures: { type: Array },
-});
+
 
 function update(check: boolean = false) {
   const animations = [];
