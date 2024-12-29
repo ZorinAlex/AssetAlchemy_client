@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { EBehaviours, getBehaviour, getTextureFromImage } from 'src/utils/particlesUtils';
-import { Texture } from 'pixi.js';
+import { forEach } from 'lodash';
 
 const emit = defineEmits(['update']);
 
@@ -11,8 +11,15 @@ const props = defineProps({
 });
 
 const images = ref([]);
-const framerate = ref(25);
-const loop  =ref(true);
+const framerate = ref(props.data?.config?.anim?.framerate || 25);
+const loop = ref(props.data?.config?.anim?.loop || true);
+
+watch(() => props.data, (newData)=>{
+  images.value = []
+  forEach(newData.config.anim.textures, texture=>{
+    images.value.push({name: texture.filename, url: texture.url})
+  })
+}, {deep: true})
 
 const active = ref(!!props.data)
 

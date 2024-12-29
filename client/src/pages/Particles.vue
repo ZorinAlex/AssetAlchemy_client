@@ -86,14 +86,23 @@
             />
 
           </div>
-          <div class="col-md-2 col-sm-6 file-buttons">
+          <div class="col-md-2 col-sm-6 file-buttons q-pl-md">
             <q-btn label="get json" color="primary" outline class="full-width" @click="downloadJson"/>
-            <q-btn label="upload" color="primary" outline class="full-width"/>
+            <q-file
+              v-model="file"
+              class="full-width"
+              outlined
+              accept=".json"
+              @update:model-value="onJsonFileUploaded"
+            ><template v-slot:prepend>
+              <q-icon name="attach_file" />
+            </template>
+            </q-file>
           </div>
         </div>
 
       </div>
-      <div class="col-3 behavior__panel">
+      <div class="col-3 behavior__panel" :key="panelkey">
         <color @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR)"/>
         <color-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR_STATIC)"/>
         <alpha @update="updateBehavior" :data="getBehaviourData(EBehaviours.ALPHA)"/>
@@ -111,10 +120,10 @@
         <spawn-burst @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_BURST)"/>
         <spawn-shape @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_SHAPE)"/>
         <texture-single :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.TEXTURE_SINGLE)"/>
-        <texture-random :textures="images" @update="updateBehavior"/>
-        <texture-ordered :textures="images" @update="updateBehavior"/>
-        <animated-single :textures="images" @update="updateBehavior"/>
-        <animated-random :textures="images" @update="updateBehavior"/>
+        <texture-random :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.TEXTURE_RANDOM)"/>
+        <texture-ordered :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.TEXTURE_ORDERED)"/>
+        <animated-single :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.ANIMATED_SINGLE)"/>
+        <animated-random :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.ANIMATED_RANDOM)"/>
       </div>
   </div>
 
@@ -148,7 +157,7 @@ import TextureOrdered from 'components/particleBehaviour/textureOrdered.vue';
 import AnimatedSingle from 'components/particleBehaviour/animatedSingle.vue';
 import AnimatedRandom from 'components/particleBehaviour/animatedRandom.vue';
 import { EBehaviours, getTextureFromImage } from 'src/utils/particlesUtils';
-import { find } from 'lodash';
+import { find, forEach, map } from 'lodash';
 
 const pixiContainer = ref<HTMLDivElement | null>(null);
 let app: PIXI.Application | null = null;
@@ -156,6 +165,7 @@ let particleEmitter: Emitter | null = null;
 let images: Array<IImageFile> = ref([])
 let defImage = 'src/assets/particle.png'
 let particleCount = ref(0)
+let panelkey = ref(0);
 
 let particleBehaviors: Array<any> = [
   {
@@ -265,6 +275,8 @@ const addAtBack: boolean = ref(true);
 const posX: number = ref(0);
 const posY: number = ref(0);
 
+const file = ref()
+
 const onResize = () => {
   if (app && pixiContainer.value) {
     app.renderer.resize(pixiContainer.value.offsetWidth, pixiContainer.value.offsetHeight);
@@ -294,7 +306,6 @@ function getConfig() {
 }
 
 function updateBehavior(data: IBehaviorUpdate) {
-
   const behaviourIndex = particleBehaviors.findIndex(behavior => behavior.type === data.behavior.type);
   if (data.active) {
     if (behaviourIndex >= 0) {
@@ -309,7 +320,6 @@ function updateBehavior(data: IBehaviorUpdate) {
   }
   const particleConfig = getConfig();
   particleEmitter?.destroy();
-  console.log(particleConfig);
   try {
     particleEmitter = new Emitter(app.stage, particleConfig);
     particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
@@ -335,6 +345,77 @@ function downloadJson(){
 
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function onJsonFileUploaded(file){
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const json = JSON.parse(event.target.result);
+      lifetimeMin.value = json.lifetime.min;
+      lifetimeMax.value = json.lifetime.max;
+
+      frequency.value = json.frequency;
+      spawnChance.value = json.spawnChance;
+      particlesPerWave.value = json.particlesPerWave;
+      emitterLifetime.value = json.emitterLifetime;
+      maxParticles.value = json.maxParticles;
+      addAtBack.value = json.addAtBack;
+      posX.value = json.pos.x;
+      posY.value = json.pos.y;
+      parseBehaviors(json.behaviors);
+      try {
+        const particleConfig = getConfig();
+        particleEmitter?.destroy();
+        particleEmitter = new Emitter(app.stage, particleConfig);
+        particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
+      }catch (e) {
+        console.error(e);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+function getTextureFromImagesFiles(name){
+  if(name === defImage){
+    return getTextureFromImage({url: defImage, name: defImage})
+  }
+  const image = find(images.value, i=> i.name === name);
+  if(image){
+    return getTextureFromImage(image)
+  }else{
+    console.error(`cannot find texture for ${name}`)
+  }
+}
+
+function parseBehaviors(behaviors){
+  particleBehaviors = []
+  forEach(behaviors, behavior=>{
+    switch (behavior.type){
+      case EBehaviours.TEXTURE_SINGLE:
+        behavior.config.texture = getTextureFromImagesFiles(behavior.config.texture)
+        break;
+      case EBehaviours.TEXTURE_ORDERED:
+      case EBehaviours.TEXTURE_RANDOM:
+        behavior.config.textures = map(behavior.config.textures, texture=>getTextureFromImagesFiles(texture))
+        break;
+      case EBehaviours.ANIMATED_SINGLE:
+        behavior.config.anim.textures = map(behavior.config.anim.textures, texture=>getTextureFromImagesFiles(texture))
+        break;
+      case EBehaviours.ANIMATED_RANDOM:
+        forEach(behavior.config.anims, anim=>{
+          anim.textures = map(anim.textures, texture=>getTextureFromImagesFiles(texture))
+        })
+        break;
+    }
+    particleBehaviors.push(behavior)
+  })
+  panelkey.value+=1;
 }
 
 function getBehaviourData(name: EBehaviours){

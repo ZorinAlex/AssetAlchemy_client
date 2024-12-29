@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { EBehaviours, getBehaviour, getTextureFromImage } from 'src/utils/particlesUtils';
-import { Texture } from 'pixi.js';
+import { forEach } from 'lodash';
 
 const emit = defineEmits(['update']);
 const props = defineProps({
@@ -12,6 +12,12 @@ const props = defineProps({
 const active = ref(!!props.data)
 const images = ref([]);
 
+watch(() => props.data, (newData)=>{
+  images.value = []
+  forEach(newData.config.textures, texture=>{
+    images.value.push({name: texture.filename, url: texture.url})
+  })
+}, {deep: true})
 
 function update() {
   const imagesWithUrl = images.value.filter(val => val.url);

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, toRaw } from 'vue';
+import { ref, toRaw, watch } from 'vue';
 import { EBehaviours, getBehaviour, getTextureFromImage } from 'src/utils/particlesUtils';
-import { forEach } from 'lodash';
+import { forEach, map } from 'lodash';
 
 const emit = defineEmits(['update']);
 const props = defineProps({
@@ -17,7 +17,16 @@ const anims = ref([{
 
 const active = ref(!!props.data);
 
-
+watch(() => props.data, (newData)=>{
+  anims.value = []
+  forEach(newData.config.anims, anim=>{
+    anims.value.push({
+      images: map(anim.textures, texture => {return {name: texture.filename, url: texture.url}}),
+      framerate: anim.framerate,
+      loop: anim.loop
+    })
+  })
+}, {deep: true})
 
 function update(check: boolean = false) {
   const animations = [];

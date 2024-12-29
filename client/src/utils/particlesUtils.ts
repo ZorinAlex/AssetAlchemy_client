@@ -58,18 +58,9 @@ export enum EShape{
 export function getTextureFromImage(image: IImageFile){
   const texture = Texture.from(image.url);
   texture['filename'] = image.name;
+  texture['url'] = image.url;
   texture.toJSON = ()=>{
     return texture['filename']
   }
   return texture
 }
-
-// function getImageFilename(){
-//   let textureName = `texture_${index}`
-//   if(texture.textureCacheIds[0] === defImage){
-//     textureName = defImage
-//   }else if(texture.filename){
-//     textureName = texture.filename
-//   }
-//   return textureName
-// }

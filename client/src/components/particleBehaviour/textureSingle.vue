@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { EBehaviours, getBehaviour, getTextureFromImage } from 'src/utils/particlesUtils';
 import { IImageFile } from 'src/interfaces/imageFile';
 const emit = defineEmits(['update'])
@@ -12,19 +12,10 @@ const props = defineProps({
 })
 const active = ref(!!props.data)
 
-const inputData = ref(props.data)
 
 watch(() => props.data, (newData, oldData)=>{
-  if(!newData.filename){
-    console.log('OIGOIGOIGOOGOIGOGI');
-  }
-  console.log(newData);
-  console.log(oldData);
+  texture.value = {name: newData.config.texture.filename, url: newData.config.texture.url}
 }, {deep: true})
-
-onMounted(()=>{
-  console.log(inputData.value);
-})
 
 function update(){
   if(!texture?.value?.url) return
