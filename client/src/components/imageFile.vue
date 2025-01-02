@@ -7,12 +7,26 @@
   function remove(){
     emit('remove', props.file.name)
   }
+
+  function getImageUrl(file: File): string{
+    if(file.type.includes('image')){
+      return file.url
+    }else if(file.type.includes('json')){
+      return 'src/assets/JSON.png'
+    }else if(file.name.includes('spine')){
+      return 'src/assets/SPINE.png'
+    }else if(file.name.includes('atlas')){
+      return 'src/assets/ATLAS.png'
+    }else{
+      return 'src/assets/FILE.png'
+    }
+  }
 </script>
 
 <template>
   <div class="image-file">
     <q-img
-      :src="file.url"
+      :src="getImageUrl(file)"
       class="image-file__image"
       fit="contain"
     >

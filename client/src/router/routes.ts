@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Particles.vue') }],
   },
+  {
+    path: '/spine',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Spine.vue') }],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

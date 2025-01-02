@@ -52,7 +52,7 @@
             Particle system
           </q-item-section>
         </q-item>
-        <q-item to="/particles" clickable v-ripple>
+        <q-item to="/spine" clickable v-ripple>
           <q-item-section avatar>
             <q-icon name="videocam" />
           </q-item-section>

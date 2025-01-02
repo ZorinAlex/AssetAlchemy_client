@@ -5,7 +5,8 @@ import {IImageFile} from "src/interfaces/imageFile";
 
 const props = defineProps({
   height: { type: String, default: '100vh' },
-  title: {type: String}
+  title: {type: String},
+  type: {type: String, default: 'image'}
 })
 
 function onDrop(e) {
@@ -33,8 +34,9 @@ function fromInput(e){
 }
 
 function addImageFile(file: File){
+  if(props.type === 'image' && !file.type.includes('image')) return
   const fileIndex = files.value.findIndex(f => f.name === file.name);
-  if(file.type.includes('image') && fileIndex<0){
+  if(fileIndex<0){
     files.value.push({
       name: file.name,
       type: file.type,
@@ -83,7 +85,8 @@ onUnmounted(() => {
     <q-space></q-space>
     <q-btn flat dense icon="add" class="text-white" @click="addBtn"/>
     <q-btn flat dense icon="clear_all" class="text-white" @click="cleanBtn"/>
-    <input type="file" name="" ref="fileInput" style="display: none" accept="image/*" multiple @input.prevent="fromInput"/>
+    <input v-if="type ==='image'" type="file" name="" ref="fileInput" style="display: none" accept="image/*" multiple @input.prevent="fromInput"/>
+    <input v-else type="file" name="" ref="fileInput" style="display: none" multiple @input.prevent="fromInput"/>
   </div>
   <div
     class="images-uploader__body"
@@ -95,7 +98,8 @@ onUnmounted(() => {
     @dragover.prevent="setActive"
     @dragleave.prevent="setInactive"
   >
-    <div class="images-uploader__body__label">Drag`n Drop Images Here</div>
+    <div v-if="type ==='image'" class="images-uploader__body__label">Drag`n Drop Images Here</div>
+    <div v-else class="images-uploader__body__label">Drag`n Drop Files Here</div>
     <image-file v-for="fileImage of files" :file="fileImage" :key="fileImage.id" @remove="removeImage"></image-file>
   </div>
 </div>
