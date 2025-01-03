@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@esotericsoftware/spine-pixi-v7": "^4.2.70",
+    "@pixi-spine/runtime-3.7": "^4.0.3",
+    "@pixi-spine/runtime-3.8": "^4.0.3",
+    "@pixi-spine/runtime-4.0": "^4.0.3",
     "@pixi-spine/runtime-4.1": "^4.0.3",
     "@pixi/particle-emitter": "^5.0.8",
     "@quasar/extras": "^1.16.4",

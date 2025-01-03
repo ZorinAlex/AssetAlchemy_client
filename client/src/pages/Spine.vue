@@ -64,7 +64,14 @@ import { find, forEach, map } from 'lodash';
 
 import { Assets } from 'pixi.js';
 import { Spine, TextureAtlas } from 'pixi-spine';
-import { AtlasAttachmentLoader, SkeletonJson } from '@pixi-spine/runtime-4.1';
+// import { AtlasAttachmentLoader, SkeletonJson } from '@pixi-spine/runtime-4.0';
+import * as runtime_41 from '@pixi-spine/runtime-4.1';
+import * as runtime_40 from '@pixi-spine/runtime-4.0';
+import * as runtime_38 from '@pixi-spine/runtime-3.8';
+import * as runtime_37 from '@pixi-spine/runtime-3.7';
+import { Notify } from 'quasar';
+
+let currentRuntime = runtime_37
 
 const pixiContainer = ref<HTMLDivElement | null>(null);
 let app: PIXI.Application | null = null;
@@ -145,8 +152,8 @@ async function loadData() {
   });
 
   // Create a Spine loader
-  const spineAtlasLoader = new AtlasAttachmentLoader(spineAtlasParser);
-  const spineJsonLoader = new SkeletonJson(spineAtlasLoader);
+  const spineAtlasLoader = new currentRuntime.AtlasAttachmentLoader(spineAtlasParser);
+  const spineJsonLoader = new currentRuntime.SkeletonJson(spineAtlasLoader);
 
   // Load the Skeleton data
   const skeletonData = spineJsonLoader.readSkeletonData(spineJson);
@@ -176,8 +183,34 @@ function handleJson(data: IImageFile) {
       skins.value = map(spineJson.skins, skin => skin.name);
     }
     version.value = spineJson.skeleton?.spine;
+    setRuntime();
   };
   reader.readAsText(data.file);
+}
+
+function setRuntime(){
+  const ver = extractVersion(version.value);
+  switch (ver){
+    case '3.7':
+      currentRuntime = runtime_37
+      break;
+    case '3.8':
+      currentRuntime = runtime_38
+      break;
+    case '4.0':
+      currentRuntime = runtime_40
+      break;
+    case '4.1':
+      currentRuntime = runtime_41
+      break;
+    default:
+        Notify.create(`Unsupported version: ${version.value}`);
+  }
+}
+
+function extractVersion(inputString) {
+  const match = inputString.match(/^(\d+\.\d+)/);
+  return match ? match[1] : null;
 }
 
 function handleAtlas(data: IImageFile) {
