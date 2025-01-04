@@ -80,7 +80,7 @@ onUnmounted(() => {
 
 <template>
 <div class="images-uploader">
-  <div class="images-uploader__head bg-grey-9">
+  <div class="images-uploader__head">
     <div class="images-uploader__head_text">{{title}}: {{files.length}}</div>
     <q-space></q-space>
     <q-btn flat dense icon="add" class="text-white" @click="addBtn"/>
@@ -98,29 +98,30 @@ onUnmounted(() => {
     @dragover.prevent="setActive"
     @dragleave.prevent="setInactive"
   >
-    <div v-if="type ==='image'" class="images-uploader__body__label">Drag`n Drop Images Here</div>
+    <div v-if="type ==='image'" class="images-uploader__body__label macondo-regular">Drag`n Drop Images Here</div>
     <div v-else class="images-uploader__body__label">Drag`n Drop Files Here</div>
     <image-file v-for="fileImage of files" :file="fileImage" :key="fileImage.id" @remove="removeImage"></image-file>
   </div>
 </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
   .images-uploader__head{
     display: flex;
     flex-direction: row;
+    background-color: $secondary;
   }
   .images-uploader__head_text{
     color: white;
     padding: 5px;
-    font-size: 16px;
+    font-size: 14px;
   }
   .images-uploader__body{
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     padding: 10px;
-    background-color: #dcdcdc;
+    background-color: #f8f8f8;
     overflow-y:scroll;
     position: relative;
     align-content: flex-start;

@@ -45,7 +45,7 @@
           <q-toggle v-model="loop" label="loop" />
         </div>
       </div>
-      <div>
+      <div class="q-mb-md">
         duration: {{time.toFixed(2)}}s
       </div>
       <q-slider v-model="timePlay" @update:model-value="updateAnimation" :min="0" :max="time*100" />
@@ -55,7 +55,6 @@
 </template>
 
 <script setup lang="ts">
-// import 'pixi-spine'
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import * as PIXI from 'pixi.js';
 import { IImageFile } from 'src/interfaces/imageFile';
@@ -64,7 +63,6 @@ import { find, forEach, map } from 'lodash';
 
 import { Assets } from 'pixi.js';
 import { Spine, TextureAtlas } from 'pixi-spine';
-// import { AtlasAttachmentLoader, SkeletonJson } from '@pixi-spine/runtime-4.0';
 import * as runtime_41 from '@pixi-spine/runtime-4.1';
 import * as runtime_40 from '@pixi-spine/runtime-4.0';
 import * as runtime_38 from '@pixi-spine/runtime-3.8';

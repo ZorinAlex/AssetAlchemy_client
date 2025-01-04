@@ -70,27 +70,24 @@ function handleUpdate(data) {
 </script>
 
 <template>
-  <images-uploader height="70vh" @update="handleUpdate" title="images for pack"/>
+  <images-uploader height="70vh" @update="handleUpdate" title="IMAGES FOR PACK"/>
   <div class="row">
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6 q-pr-md">
       <q-input
-        filled
         v-model="name"
         label="sprite sheet name"
       />
       <q-select
-        filled
         v-model="format"
         :options="Object.values(ESpriteSheet)"
         label="format"
       />
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6 q-pr-md">
       <q-input
         v-model.number="maxSheetWidth"
         type="number"
         label="max width"
-        filled
       >
         <q-tooltip anchor="top middle" self="bottom middle">
           Max sprite sheet width
@@ -100,21 +97,19 @@ function handleUpdate(data) {
         v-model.number="maxSheetHeight"
         type="number"
         label="max height"
-        filled
       >
         <q-tooltip anchor="top middle" self="bottom middle">
           Max sprite sheet height
         </q-tooltip>
       </q-input>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6 q-pr-md">
       <div class="row">
-        <div class="col">
+        <div class="col q-pr-md">
           <q-input
             v-model.number="scale"
             type="number"
             label="images scale"
-            filled
           >
             <q-tooltip anchor="top middle" self="bottom middle">
               Images scale
@@ -126,7 +121,6 @@ function handleUpdate(data) {
             v-model.number="quality"
             type="number"
             label="images quality"
-            filled
           >
             <q-tooltip anchor="top middle" self="bottom middle">
               Images quality
@@ -135,12 +129,11 @@ function handleUpdate(data) {
         </div>
       </div>
       <div class="row">
-        <div class="col">
+        <div class="col q-pr-md">
           <q-input
             v-model.number="padding"
             type="number"
             label="padding"
-            filled
           >
             <q-tooltip anchor="top middle" self="bottom middle">
               padding between images
@@ -152,7 +145,6 @@ function handleUpdate(data) {
             v-model.number="border"
             type="number"
             label="border"
-            filled
           >
             <q-tooltip anchor="top middle" self="bottom middle">
               atlas edge spacing

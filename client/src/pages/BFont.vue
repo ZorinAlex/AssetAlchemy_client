@@ -80,8 +80,8 @@ async function pack(){
 </script>
 
 <template>
-  <images-uploader height="25vh" @update="handleUpdate" title="images for font"/>
-  <div class="bg-grey-9 charmap__head">Image to char map</div>
+  <images-uploader height="25vh" @update="handleUpdate" title="IMAGES FOR FONT"/>
+  <div class="charmap__head">IMAGES TO CHAR MAP</div>
   <div class="charmap">
     <div v-for="image of images" class="charmap__item">
       <q-input  v-model="image.char" label="char">
@@ -92,48 +92,42 @@ async function pack(){
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6 q-pr-md">
       <q-input
-        filled
         v-model="name"
         label="font name"
       />
       <q-select
-        filled
         v-model="format"
         :options="Object.values(ESpriteSheet)"
         label="format"
       />
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6 q-pr-md">
       <q-input
         v-model.number="size"
         type="number"
         label="size"
-        filled
       >
       </q-input>
       <q-input
         v-model.number="lineHeight"
         type="number"
         label="line height"
-        filled
       >
       </q-input>
     </div>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6 q-pr-md">
       <q-input
         v-model.number="maxSheetWidth"
         type="number"
         label="max width"
-        filled
       >
       </q-input>
       <q-input
         v-model.number="maxSheetHeight"
         type="number"
         label="max height"
-        filled
       >
       </q-input>
     </div>
@@ -142,14 +136,12 @@ async function pack(){
         v-model.number="scale"
         type="number"
         label="scale"
-        filled
       >
       </q-input>
       <q-input
         v-model.number="quality"
         type="number"
         label="quality"
-        filled
       >
       </q-input>
     </div>
@@ -173,7 +165,7 @@ async function pack(){
   flex-direction: column;
   width: 100%;
   padding: 5px;
-  background-color: #dcdcdc;
+  background-color: #fafafa;
   overflow-y: scroll;
   position: relative;
   align-content: flex-start;
@@ -181,9 +173,10 @@ async function pack(){
 }
 
 .charmap__head {
+  background-color: $secondary;
   color: white;
   padding: 5px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .charmap__item {

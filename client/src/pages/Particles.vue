@@ -3,7 +3,7 @@
       <div class="col-9">
         <images-uploader height="120px" @update="handleUpdate" title="images for particles"/>
         <div ref="pixiContainer" class="pixi-container">
-          <div class="particles-counter">particles: {{particleCount}}</div>
+          <div class="particles-counter">PARTICLES: {{particleCount}}</div>
         </div>
         <div class="row q-px-lg">
           <div class="col-md-2 col-sm-6 q-pr-md">

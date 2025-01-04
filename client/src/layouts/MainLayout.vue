@@ -3,11 +3,11 @@
     <q-header elevated dark>
       <q-toolbar>
         <q-img
-          src="../assets/AALogo.png"
-          style="width: 25px"
+          src="../assets/aa_logo.png"
+          style="width: 80px"
         />
-        <q-toolbar-title>
-          Asset Alchemy
+        <q-toolbar-title class="header__title">
+          AssetAlchemy
         </q-toolbar-title>
         <q-btn
           flat
@@ -23,6 +23,7 @@
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
+      width="250"
     >
       <q-list>
         <q-item to="/spritesheet" clickable v-ripple>
@@ -30,7 +31,7 @@
             <q-icon name="view_quilt" />
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section class="menu__item_text">
             Sprite sheet
           </q-item-section>
         </q-item>
@@ -39,7 +40,7 @@
             <q-icon name="text_fields" />
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section class="menu__item_text">
             Bitmap font
           </q-item-section>
         </q-item>
@@ -48,7 +49,7 @@
             <q-icon name="blur_on" />
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section class="menu__item_text">
             Particle system
           </q-item-section>
         </q-item>
@@ -57,7 +58,7 @@
             <q-icon name="videocam" />
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section class="menu__item_text">
             Spine viewer
           </q-item-section>
         </q-item>
@@ -85,3 +86,18 @@ function toggleLeftDrawer () {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<style scoped>
+.header__title{
+  font-family: "Black And White Picture", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 30px;
+}
+.menu__item_text{
+  font-family: "Macondo", serif;
+  font-weight: 400;
+  font-size: 20px;
+  font-style: normal;
+}
+</style>
