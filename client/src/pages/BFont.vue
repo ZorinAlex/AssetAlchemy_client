@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import ImagesUploader from 'components/imagesUploader.vue';
-import { IImageChar, IImageFile } from 'src/interfaces/imageFile';
+import { IImageChar } from 'src/interfaces/imageFile';
 import {forEach} from 'lodash';
 import { ref } from 'vue';
 import { asciiTable } from 'src/utils/ascii';
 import { ESpriteSheet } from 'src/interfaces/enums';
-import axios from 'axios';
+import { api } from 'boot/axios';
 
 const name: string = ref('');
 const format: string = ref(ESpriteSheet.PNG);
@@ -57,7 +57,7 @@ async function pack(){
   formData.append('scale', scale.value);
   formData.append('quality', quality.value);
   try {
-    const response = await axios.post('http://localhost:3100/packer/bfont', formData, {
+    const response = await api.post('/packer/bfont', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

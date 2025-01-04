@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 import ImagesUploader from 'components/imagesUploader.vue';
-import { ref, toRaw } from 'vue';
+import { ref } from 'vue';
 import { ESpriteSheet } from 'src/interfaces/enums';
 import { IImageFile } from 'src/interfaces/imageFile';
-import axios from 'axios';
+import { api } from 'boot/axios';
 
 const name: string = ref('');
 const format: string = ref(ESpriteSheet.PNG);
@@ -42,7 +42,7 @@ async function pack(){
   formData.append('quality', quality.value);
 
   try {
-    const response = await axios.post('http://localhost:3100/packer/pack', formData, {
+    const response = await api.post('/packer/pack', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
