@@ -99,7 +99,7 @@ onUnmounted(() => {
     @dragleave.prevent="setInactive"
   >
     <div v-if="type ==='image'" class="images-uploader__body__label macondo-regular">Drag`n Drop Images Here</div>
-    <div v-else class="images-uploader__body__label">Drag`n Drop Files Here</div>
+    <div v-else class="images-uploader__body__label macondo-regular">Drag`n Drop Files Here</div>
     <image-file v-for="fileImage of files" :file="fileImage" :key="fileImage.id" @remove="removeImage"></image-file>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-9">
-      <images-uploader height="120px" @update="handleUpdate" title="spine resources" type="any" />
+      <images-uploader height="120px" @update="handleUpdate" title="SPINE RESOURCES" type="any" />
 
       <div ref="pixiContainer" class="pixi-container">
       </div>
@@ -258,11 +258,5 @@ onBeforeUnmount(() => {
   height: calc(100vh - 50px);
   max-height: 100vh;
   overflow-y: scroll;
-}
-
-.file-buttons {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 </style>

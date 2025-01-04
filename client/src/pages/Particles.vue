@@ -1,7 +1,7 @@
 <template>
   <div class="row">
       <div class="col-9">
-        <images-uploader height="120px" @update="handleUpdate" title="images for particles"/>
+        <images-uploader height="120px" @update="handleUpdate" title="IMAGES FOR PARTICLES"/>
         <div ref="pixiContainer" class="pixi-container">
           <div class="particles-counter">PARTICLES: {{particleCount}}</div>
         </div>
@@ -92,6 +92,7 @@
               v-model="file"
               class="full-width"
               outlined
+              label="LOAD"
               accept=".json"
               @update:model-value="onJsonFileUploaded"
             ><template v-slot:prepend>
