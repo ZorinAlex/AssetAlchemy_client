@@ -4,9 +4,10 @@
       <q-toolbar>
         <q-img
           src="../assets/aa_logo.png"
-          style="width: 80px"
+          style="width: 80px; cursor: pointer"
+          @click="goHome"
         />
-        <q-toolbar-title class="header__title">
+        <q-toolbar-title class="header__title cursor-pointer" @click="goHome">
           AssetAlchemy
         </q-toolbar-title>
         <q-btn
@@ -72,12 +73,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
+
+function goHome() {
+  router.push('/');
+}
 
 defineOptions({
   name: 'MainLayout'
 });
+
+onMounted(()=>{
+  if(route.path === '/'){
+    leftDrawerOpen.value = false
+  }
+})
 
 
 const leftDrawerOpen = ref(false);
