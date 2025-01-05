@@ -12,13 +12,13 @@
     if(file.type.includes('image')){
       return file.url
     }else if(file.type.includes('json')){
-      return 'src/assets/JSON.png'
+      return 'JSON.png'
     }else if(file.name.includes('spine')){
-      return 'src/assets/SPINE.png'
+      return 'SPINE.png'
     }else if(file.name.includes('atlas')){
-      return 'src/assets/ATLAS.png'
+      return 'ATLAS.png'
     }else{
-      return 'src/assets/FILE.png'
+      return 'FILE.png'
     }
   }
 </script>

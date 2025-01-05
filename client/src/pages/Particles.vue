@@ -164,7 +164,7 @@ const pixiContainer = ref<HTMLDivElement | null>(null);
 let app: PIXI.Application | null = null;
 let particleEmitter: Emitter | null = null;
 let images: Array<IImageFile> = ref([])
-let defImage = 'src/assets/particle.png'
+let defImage = 'particle.png'
 let particleCount = ref(0)
 let panelkey = ref(0);
 
@@ -286,7 +286,7 @@ const onResize = () => {
 };
 
 function getConfig() {
-  const particleConfig = {
+  return {
     lifetime: {
       min: lifetimeMin.value,
       max: lifetimeMax.value,
@@ -303,7 +303,6 @@ function getConfig() {
     addAtBack: addAtBack.value,
     behaviors: particleBehaviors,
   };
-  return particleConfig;
 }
 
 function updateBehavior(data: IBehaviorUpdate) {
