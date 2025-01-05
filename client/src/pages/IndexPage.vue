@@ -42,7 +42,7 @@
           <!-- Feature 1 -->
           <router-link to="/spritesheet"
                        class="feature-item bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-            <img src="src/assets/images/spritesheet.webp" alt="Spritesheets" class="w-full h-40 object-cover">
+            <q-img src="../assets/images/spritesheet.webp" alt="Spritesheets" class="w-full h-40 object-cover"/>
             <div class="p-4">
               <h3 class="text-lg font-semibold mb-2">Create Spritesheets from Images</h3>
               <p class="text-sm text-gray-600">
@@ -53,7 +53,7 @@
           <!-- Feature 2 -->
           <router-link to="/bitmapfont"
                        class="feature-item bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-            <img src="src/assets/images/font.webp" alt="Bitmap Fonts" class="w-full h-40 object-cover">
+            <q-img src="../assets/images/font.webp" alt="Bitmap Fonts" class="w-full h-40 object-cover"/>
             <div class="p-4">
               <h3 class="text-lg font-semibold mb-2">Create Bitmap Fonts from Images</h3>
               <p class="text-sm text-gray-600">
@@ -64,7 +64,7 @@
           <!-- Feature 3 -->
           <router-link to="/particles"
                        class="feature-item bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-            <img src="src/assets/images/particles.webp" alt="Particle Systems" class="w-full h-40 object-cover">
+            <q-img src="../assets/images/particles.webp" alt="Particle Systems" class="w-full h-40 object-cover"/>
             <div class="p-4">
               <h3 class="text-lg font-semibold mb-2">Create Particle Systems</h3>
               <p class="text-sm text-gray-600">
@@ -75,7 +75,7 @@
           <!-- Feature 4 -->
           <router-link to="/spine"
                        class="feature-item bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105">
-            <img src="src/assets/images/spine.webp" alt="Spine Viewer" class="w-full h-40 object-cover">
+            <q-img src="../assets/images/spine.webp" alt="Spine Viewer" class="w-full h-40 object-cover"/>
             <div class="p-4">
               <h3 class="text-lg font-semibold mb-2">Spine Viewer</h3>
               <p class="text-sm text-gray-600">
