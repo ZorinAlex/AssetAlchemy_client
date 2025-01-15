@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import { ESpriteSheet } from 'src/interfaces/enums';
 import { IImageFile } from 'src/interfaces/imageFile';
 import { api } from 'boot/axios';
+import { Notify } from 'quasar';
 
 const name: string = ref('');
 const format: string = ref(ESpriteSheet.PNG);
@@ -12,7 +13,7 @@ const maxSheetWidth: number = ref(1024);
 const maxSheetHeight: number = ref(1024);
 const padding: number = ref(0);
 const smart: boolean = ref(true);
-const pot: boolean = ref(true);
+const pot: boolean = ref(false);
 const square: boolean = ref(false);
 const allowRotation: boolean = ref(true);
 const tag: boolean = ref(false);
@@ -20,9 +21,12 @@ const border: number = ref(0);
 const scale: number = ref(1);
 const quality: number = ref(100);
 
+const loading: boolean = ref(false);
+
 let images: Array<IImageFile> = ref([])
 
 async function pack(){
+  loading.value = true;
   const formData = new FormData();
   images.value.forEach((file) => {
     formData.append('files', file.file);
@@ -58,8 +62,11 @@ async function pack(){
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    loading.value = false;
   } catch (error) {
     console.error('Error uploading files:', error);
+    loading.value = false;
+    Notify.create(`Pack error: ${error.message}`);
   }
 }
 
@@ -187,6 +194,7 @@ function handleUpdate(data) {
           color="primary"
           outline
           :disable="images.length === 0"
+          :loading="loading"
           style="width: 95%"
           @click="pack"
         />

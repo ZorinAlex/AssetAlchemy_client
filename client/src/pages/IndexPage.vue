@@ -217,6 +217,7 @@
                                                                                   href="https://github.com/pixijs-userland/particle-emitter#readme">Github</a>
               its uses all possible options for this pixi module, regarding meaning of each option read module
               <a class="text-yellow-400 underline" href="https://particle-emitter.pixijs.io/docs/">documentation</a></p>
+            <p>for pixi v8 version use <a class="text-yellow-500 underline" href="https://github.com/andriibarvynko/particle-emitter">Github</a></p>
             <p class="font-bold">Save</p>
             <p class="mb-4">As a result you can download JSON file by pressing "GET JSON" button, with all options for
               use this particle system in your Pixi app</p>

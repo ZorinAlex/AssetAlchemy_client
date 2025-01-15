@@ -6,6 +6,9 @@ import { ref } from 'vue';
 import { asciiTable } from 'src/utils/ascii';
 import { ESpriteSheet } from 'src/interfaces/enums';
 import { api } from 'boot/axios';
+import { Notify } from 'quasar';
+
+const loading: boolean = ref(false);
 
 const name: string = ref('');
 const format: string = ref(ESpriteSheet.PNG);
@@ -43,6 +46,7 @@ function handleUpdate(data) {
 async function pack(){
   const formData = new FormData();
   const data = []
+  loading.value = true;
   images.value.forEach((imageData) => {
     formData.append('files', imageData.image.file);
     data.push({filename: imageData.image.name, char: imageData.char});
@@ -73,8 +77,11 @@ async function pack(){
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    loading.value = false;
   } catch (error) {
     console.error('Error uploading files:', error);
+    loading.value = false;
+    Notify.create(`Font creation error: ${error.message}`);
   }
 }
 </script>
@@ -152,6 +159,7 @@ async function pack(){
       color="primary"
       outline
       :disable="images.length === 0"
+      :loading="loading"
       @click="pack"
       style="width: 200px"
     />
