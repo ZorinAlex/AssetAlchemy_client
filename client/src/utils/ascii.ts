@@ -93,9 +93,34 @@ export const asciiTable: Map<string, IASCII> = new Map([
   ["{", { DEC: 123, Char: "{" }],
   ["|", { DEC: 124, Char: "|" }],
   ["}", { DEC: 125, Char: "}" }],
-  ["~", { DEC: 126, Char: "~" }]
+  ["~", { DEC: 126, Char: "~" }],
+  ["€", { DEC: 8364, Char: "€" }],
+  ["£", { DEC: 163, Char: "£" }],
+  ["¥", { DEC: 165, Char: "¥" }],
+  ["₴", { DEC: 8372, Char: "₴" }],
+  ["₹", { DEC: 8377, Char: "₹" }],
+  ["₩", { DEC: 8361, Char: "₩" }],
+  ["₺", { DEC: 8378, Char: "₺" }],
+  ["₦", { DEC: 8358, Char: "₦" }],
+  ["₫", { DEC: 8363, Char: "₫" }],
 ]);
 
 export interface IASCII{
  DEC: number; Char: string
+}
+
+export function getASCIIData(char: string):IASCII{
+  switch (true) {
+    case char.includes('dot'):
+    case char.includes('poin'):
+      return asciiTable.get('.');
+    case char.includes('com'):
+      return asciiTable.get(',');
+    case char.includes('dol'):
+      return asciiTable.get('$');
+    case char.includes('eur'):
+      return asciiTable.get('€');
+    default:
+      return asciiTable.get(char.charAt(0))!;
+  }
 }

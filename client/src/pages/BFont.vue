@@ -3,7 +3,7 @@ import ImagesUploader from 'components/imagesUploader.vue';
 import { IImageChar } from 'src/interfaces/imageFile';
 import {forEach} from 'lodash';
 import { ref } from 'vue';
-import { asciiTable } from 'src/utils/ascii';
+import {getASCIIData} from 'src/utils/ascii';
 import { ESpriteSheet } from 'src/interfaces/enums';
 import { api } from 'boot/axios';
 import { Notify } from 'quasar';
@@ -12,7 +12,7 @@ const loading: boolean = ref(false);
 
 const name: string = ref('');
 const format: string = ref(ESpriteSheet.PNG);
-const size: number = ref(25);
+const size: number = ref(125);
 const lineHeight: number = ref(25);
 const maxSheetWidth: number = ref(1024);
 const maxSheetHeight: number = ref(1024);
@@ -25,20 +25,11 @@ function handleUpdate(data) {
   images.value = [];
   forEach(data, (imageFile)=>{
     const filename = imageFile.name.split('.')[0];
-    const firstLetter = Array.from(filename)[0];
     const dataImage: IImageChar = {
       image: imageFile,
       char: null
     }
-    if(asciiTable.has(firstLetter)){
-      dataImage.char = asciiTable.get(firstLetter).Char
-    }
-    if(filename.includes('dot')){
-      dataImage.char = asciiTable.get('.').Char
-    }
-    if(filename.includes('com')){
-      dataImage.char = asciiTable.get(',').Char
-    }
+    dataImage.char = getASCIIData(filename).Char
     images.value.push(dataImage)
   })
 }
