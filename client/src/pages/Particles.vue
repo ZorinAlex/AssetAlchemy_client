@@ -1,131 +1,168 @@
 <template>
   <div class="row">
-      <div class="col-9">
-        <images-uploader height="120px" @update="handleUpdate" title="IMAGES FOR PARTICLES"/>
-        <div ref="pixiContainer" class="pixi-container">
-          <div class="particles-counter">PARTICLES: {{particleCount}}</div>
+    <div class="col-9">
+      <images-uploader height="120px" @update="handleUpdate" title="IMAGES FOR PARTICLES" />
+      <div ref="pixiContainer" class="pixi-container">
+        <div class="particles-counter">PARTICLES: {{ particleCount }}</div>
+      </div>
+      <div class="row q-px-lg">
+        <div class="col-md-2 col-sm-6 q-pr-md">
+          <q-input
+            v-model.number="lifetimeMin"
+            type="number"
+            label="lifetime min"
+            square
+            @change="particleEmitter.minLifetime = lifetimeMin"
+          ></q-input>
+          <q-input
+            v-model.number="lifetimeMax"
+            type="number"
+            label="lifetime max"
+            square
+            @change="particleEmitter.maxLifetime = lifetimeMax"
+          ></q-input>
         </div>
-        <div class="row q-px-lg">
-          <div class="col-md-2 col-sm-6 q-pr-md">
-            <q-input
-              v-model.number="lifetimeMin"
-              type="number"
-              label="lifetime min"
-              square
-              @change="particleEmitter.minLifetime = lifetimeMin"
-            ></q-input>
-            <q-input
-              v-model.number="lifetimeMax"
-              type="number"
-              label="lifetime max"
-              square
-              @change="particleEmitter.maxLifetime = lifetimeMax"
-            ></q-input>
-          </div>
-          <div class="col-md-2 col-sm-6 q-pr-md">
-            <q-input
-              v-model.number="posX"
-              type="number"
-              label="position X"
-              square
-              @change="particleEmitter.updateSpawnPos(posX, posY)"
-            ></q-input>
-            <q-input
-              v-model.number="posY"
-              type="number"
-              label="position Y"
-              square
-              @change="particleEmitter.updateSpawnPos(posX, posY)"
-            ></q-input>
-          </div>
-          <div class="col-md-2 col-sm-6 q-pr-md">
-            <q-input
-              v-model.number="frequency"
-              type="number"
-              label="frequency"
-              square
-              @change="particleEmitter.frequency = frequency"
-            ></q-input>
-            <q-input
-              v-model.number="spawnChance"
-              type="number"
-              label="spawn chance"
-              square
-              @change="particleEmitter.spawnChance = spawnChance"
-            ></q-input>
-          </div>
-          <div class="col-md-2 col-sm-6 q-pr-md">
-            <q-input
-              v-model.number="particlesPerWave"
-              type="number"
-              label="particles per wave"
-              square
-              @change="particleEmitter.particlesPerWave = particlesPerWave"
-            ></q-input>
-            <q-input
-              v-model.number="emitterLifetime"
-              type="number"
-              label="emitter lifetime"
-              square
-              @change="particleEmitter.emitterLifetime = emitterLifetime"
-            ></q-input>
-          </div>
-          <div class="col-md-2 col-sm-6">
-            <q-input
-              v-model.number="maxParticles"
-              type="number"
-              label="max particles"
-              square
-              @change="particleEmitter.maxParticles = maxParticles"
-            ></q-input>
-            <q-toggle
-              class="q-pt-sm"
-              v-model="addAtBack"
-              label="add at back"
-              @update:model-value="particleEmitter.addAtBack= addAtBack"
-            />
+        <div class="col-md-2 col-sm-6 q-pr-md">
+          <q-input
+            v-model.number="posX"
+            type="number"
+            label="position X"
+            square
+            @change="particleEmitter.updateSpawnPos(posX, posY)"
+          ></q-input>
+          <q-input
+            v-model.number="posY"
+            type="number"
+            label="position Y"
+            square
+            @change="particleEmitter.updateSpawnPos(posX, posY)"
+          ></q-input>
+        </div>
+        <div class="col-md-2 col-sm-6 q-pr-md">
+          <q-input
+            v-model.number="frequency"
+            type="number"
+            label="frequency"
+            square
+            @change="particleEmitter.frequency = frequency"
+          ></q-input>
+          <q-input
+            v-model.number="spawnChance"
+            type="number"
+            label="spawn chance"
+            square
+            @change="particleEmitter.spawnChance = spawnChance"
+          ></q-input>
+        </div>
+        <div class="col-md-2 col-sm-6 q-pr-md">
+          <q-input
+            v-model.number="particlesPerWave"
+            type="number"
+            label="particles per wave"
+            square
+            @change="particleEmitter.particlesPerWave = particlesPerWave"
+          ></q-input>
+          <q-input
+            v-model.number="emitterLifetime"
+            type="number"
+            label="emitter lifetime"
+            square
+            @change="particleEmitter.emitterLifetime = emitterLifetime"
+          ></q-input>
+        </div>
+        <div class="col-md-2 col-sm-6">
+          <q-input
+            v-model.number="maxParticles"
+            type="number"
+            label="max particles"
+            square
+            @change="particleEmitter.maxParticles = maxParticles"
+          ></q-input>
+          <q-toggle
+            class="q-pt-sm"
+            v-model="addAtBack"
+            label="add at back"
+            @update:model-value="particleEmitter.addAtBack= addAtBack"
+          />
 
-          </div>
-          <div class="col-md-2 col-sm-6 file-buttons q-pl-md">
-            <q-btn label="get json" color="primary" outline class="full-width" @click="downloadJson"/>
-            <q-file
-              v-model="file"
-              class="full-width"
-              outlined
-              label="LOAD"
-              accept=".json"
-              @update:model-value="onJsonFileUploaded"
-            ><template v-slot:prepend>
+        </div>
+        <div class="col-md-2 col-sm-6 file-buttons q-pl-md">
+          <q-btn label="get json" color="primary" outline class="full-width" @click="downloadJson" />
+          <q-file
+            v-model="file"
+            class="full-width"
+            outlined
+            label="LOAD"
+            accept=".json"
+            @update:model-value="onJsonFileUploaded"
+          >
+            <template v-slot:prepend>
               <q-icon name="attach_file" />
             </template>
-            </q-file>
-          </div>
+          </q-file>
         </div>
+      </div>
+      <div>
+        <div class="text-caption q-px-lg q-py-sm">Move particles</div>
+        <div class="row q-px-lg">
+          <q-select
+            v-model="moveMode"
+            :options="moveModeOptions"
+            emit-value
+            map-options
+            outlined
+            label="mode"
+            class="col-md-2 col-sm-6 q-pr-md"
+            @update:model-value="onMoveModeChange"
+          />
+          <q-input
+            v-if="moveMode === 'orbit'"
+            v-model.number="orbitRadius"
+            type="number"
+            label="orbit radius (r)"
+            square
+            class="col-md-2 col-sm-6 q-pr-md"
+          />
 
+          <q-input
+            v-if="moveMode === 'orbit'"
+            v-model.number="orbitSpeed"
+            type="number"
+            label="orbit speed (v)"
+            class="col-md-2 col-sm-6 q-pr-md"
+            square
+          />
+        </div>
       </div>
-      <div class="col-3 behavior__panel" :key="panelkey">
-        <color @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR)"/>
-        <color-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR_STATIC)"/>
-        <alpha @update="updateBehavior" :data="getBehaviourData(EBehaviours.ALPHA)"/>
-        <alpha-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.ALPHA_STATIC)"/>
-        <scale @update="updateBehavior" :data="getBehaviourData(EBehaviours.SCALE)"/>
-        <scale-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.SCALE_STATIC)"/>
-        <rotation @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION)"/>
-        <rotation-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION_STATIC)"/>
-        <rotation-no @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION_NO)"/>
-        <move-speed @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_SPEED)"/>
-        <move-speed-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_SPEED_STATIC)"/>
-        <move-acceleration @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_ACCELERATION)"/>
-        <move-path @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_PATH)"/>
-        <blend-mode @update="updateBehavior" :data="getBehaviourData(EBehaviours.BLEND_MODE)"/>
-        <spawn-burst @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_BURST)"/>
-        <spawn-shape @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_SHAPE)"/>
-        <texture-single :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.TEXTURE_SINGLE)"/>
-        <texture-random :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.TEXTURE_RANDOM)"/>
-        <texture-ordered :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.TEXTURE_ORDERED)"/>
-        <animated-single :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.ANIMATED_SINGLE)"/>
-        <animated-random :textures="images" @update="updateBehavior" :data="getBehaviourData(EBehaviours.ANIMATED_RANDOM)"/>
-      </div>
+    </div>
+    <div class="col-3 behavior__panel" :key="panelkey">
+      <color @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR)" />
+      <color-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.COLOR_STATIC)" />
+      <alpha @update="updateBehavior" :data="getBehaviourData(EBehaviours.ALPHA)" />
+      <alpha-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.ALPHA_STATIC)" />
+      <scale @update="updateBehavior" :data="getBehaviourData(EBehaviours.SCALE)" />
+      <scale-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.SCALE_STATIC)" />
+      <rotation @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION)" />
+      <rotation-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION_STATIC)" />
+      <rotation-no @update="updateBehavior" :data="getBehaviourData(EBehaviours.ROTATION_NO)" />
+      <move-speed @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_SPEED)" />
+      <move-speed-static @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_SPEED_STATIC)" />
+      <move-acceleration @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_ACCELERATION)" />
+      <move-path @update="updateBehavior" :data="getBehaviourData(EBehaviours.MOVE_PATH)" />
+      <blend-mode @update="updateBehavior" :data="getBehaviourData(EBehaviours.BLEND_MODE)" />
+      <spawn-burst @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_BURST)" />
+      <spawn-shape @update="updateBehavior" :data="getBehaviourData(EBehaviours.SPAWN_SHAPE)" />
+      <texture-single :textures="images" @update="updateBehavior"
+                      :data="getBehaviourData(EBehaviours.TEXTURE_SINGLE)" />
+      <texture-random :textures="images" @update="updateBehavior"
+                      :data="getBehaviourData(EBehaviours.TEXTURE_RANDOM)" />
+      <texture-ordered :textures="images" @update="updateBehavior"
+                       :data="getBehaviourData(EBehaviours.TEXTURE_ORDERED)" />
+      <animated-single :textures="images" @update="updateBehavior"
+                       :data="getBehaviourData(EBehaviours.ANIMATED_SINGLE)" />
+      <animated-random :textures="images" @update="updateBehavior"
+                       :data="getBehaviourData(EBehaviours.ANIMATED_RANDOM)" />
+    </div>
   </div>
 
 </template>
@@ -163,9 +200,9 @@ import { find, forEach, map } from 'lodash';
 const pixiContainer = ref<HTMLDivElement | null>(null);
 let app: PIXI.Application | null = null;
 let particleEmitter: Emitter | null = null;
-let images: Array<IImageFile> = ref([])
-let defImage = 'particle.png'
-let particleCount = ref(0)
+let images: Array<IImageFile> = ref([]);
+let defImage = 'particle.png';
+let particleCount = ref(0);
 let panelkey = ref(0);
 
 let particleBehaviors: Array<any> = [
@@ -259,7 +296,7 @@ let particleBehaviors: Array<any> = [
   {
     type: 'textureSingle',
     config: {
-      texture: getTextureFromImage({url: defImage, name: defImage}),
+      texture: getTextureFromImage({ url: defImage, name: defImage }),
     },
   },
 ];
@@ -276,7 +313,17 @@ const addAtBack: boolean = ref(true);
 const posX: number = ref(0);
 const posY: number = ref(0);
 
-const file = ref()
+const moveMode = ref<'disabled' | 'mouse' | 'orbit'>('disabled');
+const moveModeOptions = [
+  { label: 'Disabled', value: 'disabled' },
+  { label: 'Follow mouse', value: 'mouse' },
+  { label: 'Orbit', value: 'orbit' },
+];
+
+const orbitRadius = ref(200); // r
+const orbitSpeed = ref(600);  // v
+
+const file = ref();
 
 const onResize = () => {
   if (app && pixiContainer.value) {
@@ -322,8 +369,8 @@ function updateBehavior(data: IBehaviorUpdate) {
   particleEmitter?.destroy();
   try {
     particleEmitter = new Emitter(app.stage, particleConfig);
-    particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
-  }catch (e) {
+    positionEmitter(app, particleEmitter);
+  } catch (e) {
     console.error(e);
   }
 }
@@ -332,12 +379,12 @@ function handleUpdate(data) {
   images.value = data;
 }
 
-function downloadJson(){
-  const data = JSON.stringify(getConfig())
-  const blob = new Blob([data], { type: "application/json" });
+function downloadJson() {
+  const data = JSON.stringify(getConfig());
+  const blob = new Blob([data], { type: 'application/json' });
 
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = 'particles.json';
   document.body.appendChild(a);
@@ -347,7 +394,7 @@ function downloadJson(){
   URL.revokeObjectURL(url);
 }
 
-function onJsonFileUploaded(file){
+function onJsonFileUploaded(file) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (event) => {
@@ -369,8 +416,8 @@ function onJsonFileUploaded(file){
         const particleConfig = getConfig();
         particleEmitter?.destroy();
         particleEmitter = new Emitter(app.stage, particleConfig);
-        particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
-      }catch (e) {
+        positionEmitter(app, particleEmitter);
+      } catch (e) {
         console.error(e);
       }
     } catch (error) {
@@ -381,46 +428,46 @@ function onJsonFileUploaded(file){
   reader.readAsText(file);
 }
 
-function getTextureFromImagesFiles(name){
-  if(name === defImage){
-    return getTextureFromImage({url: defImage, name: defImage})
+function getTextureFromImagesFiles(name) {
+  if (name === defImage) {
+    return getTextureFromImage({ url: defImage, name: defImage });
   }
-  const image = find(images.value, i=> i.name === name);
-  if(image){
-    return getTextureFromImage(image)
-  }else{
-    console.error(`cannot find texture for ${name}`)
+  const image = find(images.value, i => i.name === name);
+  if (image) {
+    return getTextureFromImage(image);
+  } else {
+    console.error(`cannot find texture for ${name}`);
   }
 }
 
-function parseBehaviors(behaviors){
-  particleBehaviors = []
-  forEach(behaviors, behavior=>{
-    switch (behavior.type){
+function parseBehaviors(behaviors) {
+  particleBehaviors = [];
+  forEach(behaviors, behavior => {
+    switch (behavior.type) {
       case EBehaviours.TEXTURE_SINGLE:
-        behavior.config.texture = getTextureFromImagesFiles(behavior.config.texture)
+        behavior.config.texture = getTextureFromImagesFiles(behavior.config.texture);
         break;
       case EBehaviours.TEXTURE_ORDERED:
       case EBehaviours.TEXTURE_RANDOM:
-        behavior.config.textures = map(behavior.config.textures, texture=>getTextureFromImagesFiles(texture))
+        behavior.config.textures = map(behavior.config.textures, texture => getTextureFromImagesFiles(texture));
         break;
       case EBehaviours.ANIMATED_SINGLE:
-        behavior.config.anim.textures = map(behavior.config.anim.textures, texture=>getTextureFromImagesFiles(texture))
+        behavior.config.anim.textures = map(behavior.config.anim.textures, texture => getTextureFromImagesFiles(texture));
         break;
       case EBehaviours.ANIMATED_RANDOM:
-        forEach(behavior.config.anims, anim=>{
-          anim.textures = map(anim.textures, texture=>getTextureFromImagesFiles(texture))
-        })
+        forEach(behavior.config.anims, anim => {
+          anim.textures = map(anim.textures, texture => getTextureFromImagesFiles(texture));
+        });
         break;
     }
-    particleBehaviors.push(behavior)
-  })
-  panelkey.value+=1;
+    particleBehaviors.push(behavior);
+  });
+  panelkey.value += 1;
 }
 
-function getBehaviourData(name: EBehaviours){
-  const data = find(particleBehaviors, beh=>beh.type === name)
-  return data
+function getBehaviourData(name: EBehaviours) {
+  const data = find(particleBehaviors, beh => beh.type === name);
+  return data;
 }
 
 onMounted(() => {
@@ -430,6 +477,7 @@ onMounted(() => {
       height: 500,
       backgroundColor: 0xffffff,
     });
+
     globalThis.__PIXI_APP__ = app;
     pixiContainer.value.appendChild(app.view);
 
@@ -438,7 +486,7 @@ onMounted(() => {
     particleEmitter = new Emitter(app.stage, particleConfig);
 
     if (app) {
-      particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
+      positionEmitter(app, particleEmitter);
     }
 
     // Start the particle emitter
@@ -447,12 +495,12 @@ onMounted(() => {
     // Update particles
     const update = () => {
       let now = Date.now();
-      try{
+      try {
         particleEmitter.update((now - elapsed) * 0.001);
-      }catch (e) {
+      } catch (e) {
         console.error(e);
       }
-      particleCount.value = particleEmitter.particleCount
+      particleCount.value = particleEmitter.particleCount;
       elapsed = now;
     };
 
@@ -462,6 +510,69 @@ onMounted(() => {
     update();
   }
 });
+
+function onMoveModeChange() {
+  if (app && particleEmitter) {
+    positionEmitter(app, particleEmitter);
+  }
+}
+
+function positionEmitter(app: PIXI.Application, particleEmitter: Emitter) {
+  app.stage.off('pointermove');
+  app.stage.off('pointerleave');
+  switch(moveMode.value){
+    case 'disabled':
+      particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
+      break;
+    case 'mouse':
+      followMouse(app, particleEmitter);
+      break;
+    case 'orbit':
+      orbitFly(app, particleEmitter);
+      break;
+  }
+
+}
+
+function orbitFly(app: PIXI.Application, particleEmitter: Emitter) {
+  let elapsed = Date.now();
+  const update = () => {
+    const now = Date.now();
+    const dt = (now - elapsed) * 0.001;
+    const r = orbitRadius.value;
+    const v = orbitSpeed.value;
+
+    //if (followMode.value === 'orbit') {
+    // кутова швидкість ω = v / r
+    const omega = v / r;
+    const orbitAngle = omega * dt;
+
+    const orbitCenterX = app.screen.width / 2;
+    const orbitCenterY = app.screen.height / 2;
+
+    const x = orbitCenterX + Math.cos(orbitAngle) * r;
+    const y = orbitCenterY + Math.sin(orbitAngle) * r;
+    if (particleEmitter.spawnPos) {
+      particleEmitter.updateOwnerPos(x, y);
+    }
+
+    //}
+  };
+  app.ticker.add(update);
+}
+
+function followMouse(app: PIXI.Application, particleEmitter: Emitter) {
+  (app.stage as any).interactive = true;
+  app.stage.hitArea = app.screen;
+  const followMouse = (e: PIXI.FederatedPointerEvent) => {
+    const { x, y } = e.global;
+    particleEmitter?.updateOwnerPos(x, y);
+  };
+  app.stage.on('pointermove', followMouse);
+  app.stage.on('pointerleave', () => {
+    particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
+  });
+}
 
 onBeforeUnmount(() => {
   if (app) {
@@ -478,17 +589,20 @@ onBeforeUnmount(() => {
   height: 500px;
   position: relative;
 }
-.behavior__panel{
+
+.behavior__panel {
   height: calc(100vh - 50px);
   max-height: 100vh;
   overflow-y: scroll;
 }
-.particles-counter{
+
+.particles-counter {
   position: absolute;
   top: 0;
   left: 0
 }
-.file-buttons{
+
+.file-buttons {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
