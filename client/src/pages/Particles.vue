@@ -322,6 +322,7 @@ const moveModeOptions = [
 
 const orbitRadius = ref(200); // r
 const orbitSpeed = ref(600);  // v
+let orbitUpdate;
 
 const file = ref();
 
@@ -518,8 +519,7 @@ function onMoveModeChange() {
 }
 
 function positionEmitter(app: PIXI.Application, particleEmitter: Emitter) {
-  app.stage.off('pointermove');
-  app.stage.off('pointerleave');
+  clearMove(app);
   switch(moveMode.value){
     case 'disabled':
       particleEmitter.updateOwnerPos(app.screen.width / 2, app.screen.height / 2);
@@ -531,19 +531,26 @@ function positionEmitter(app: PIXI.Application, particleEmitter: Emitter) {
       orbitFly(app, particleEmitter);
       break;
   }
+}
 
+function clearMove(app: PIXI.Application){
+  app.stage.off('pointermove');
+  app.stage.off('pointerleave');
+  (app.stage as any).eventMode = 'none';
+  if(orbitUpdate){
+    app.ticker.remove(orbitUpdate);
+    orbitUpdate = null;
+  }
 }
 
 function orbitFly(app: PIXI.Application, particleEmitter: Emitter) {
   let elapsed = Date.now();
-  const update = () => {
+  orbitUpdate = () => {
     const now = Date.now();
     const dt = (now - elapsed) * 0.001;
     const r = orbitRadius.value;
     const v = orbitSpeed.value;
 
-    //if (followMode.value === 'orbit') {
-    // кутова швидкість ω = v / r
     const omega = v / r;
     const orbitAngle = omega * dt;
 
@@ -555,14 +562,12 @@ function orbitFly(app: PIXI.Application, particleEmitter: Emitter) {
     if (particleEmitter.spawnPos) {
       particleEmitter.updateOwnerPos(x, y);
     }
-
-    //}
   };
-  app.ticker.add(update);
+  app.ticker.add(orbitUpdate);
 }
 
 function followMouse(app: PIXI.Application, particleEmitter: Emitter) {
-  (app.stage as any).interactive = true;
+  (app.stage as any).eventMode = 'static';
   app.stage.hitArea = app.screen;
   const followMouse = (e: PIXI.FederatedPointerEvent) => {
     const { x, y } = e.global;
