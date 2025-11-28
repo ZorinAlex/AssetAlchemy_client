@@ -110,7 +110,6 @@
         </div>
       </div>
       <div>
-        <div class="text-caption q-px-lg q-py-sm">Move particles</div>
         <div class="row q-px-lg">
           <q-select
             v-model="moveMode"
@@ -118,7 +117,7 @@
             emit-value
             map-options
             outlined
-            label="mode"
+            label="Move particles"
             class="col-md-2 col-sm-6 q-pr-md"
             @update:model-value="onMoveModeChange"
           />
