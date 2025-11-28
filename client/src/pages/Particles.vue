@@ -90,7 +90,7 @@
           <q-btn label="get json" color="primary" outline class="full-width" @click="downloadJson" />
           <q-file
             v-model="file"
-            class="full-width"
+            class="full-width q-mt-sm"
             outlined
             label="LOAD"
             accept=".json"
@@ -100,6 +100,13 @@
               <q-icon name="attach_file" />
             </template>
           </q-file>
+          <q-input
+            v-model="relativePath"
+            type="text"
+            label="relative path"
+            square
+            class="q-mt-sm"
+          ></q-input>
         </div>
       </div>
       <div>
@@ -325,6 +332,7 @@ const orbitSpeed = ref(600);  // v
 let orbitUpdate;
 
 const file = ref();
+const relativePath = ref('');
 
 const onResize = () => {
   if (app && pixiContainer.value) {
@@ -381,7 +389,13 @@ function handleUpdate(data) {
 }
 
 function downloadJson() {
-  const data = JSON.stringify(getConfig());
+  const baseConfig = getConfig();
+
+  const configForSave = relativePath.value.trim()
+    ? addRelativePathToAllTextures(baseConfig)
+    : baseConfig;
+
+  let data = JSON.stringify(configForSave);
   const blob = new Blob([data], { type: 'application/json' });
 
   const url = URL.createObjectURL(blob);
@@ -393,6 +407,21 @@ function downloadJson() {
 
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+function addRelativePathToAllTextures(data): any {
+  const config = JSON.parse(JSON.stringify(data));
+  config.behaviors.forEach(behavior => {
+    if(behavior.config['texture']){
+      behavior.config['texture'] = joinRelativePath(behavior.config['texture']);
+    }
+    if(behavior.config['textures']){
+      behavior.config['textures'].forEach((texture, index) => {
+        behavior.config['textures'][index] = joinRelativePath(texture);
+      })
+    }
+  })
+  return config
 }
 
 function onJsonFileUploaded(file) {
@@ -429,15 +458,43 @@ function onJsonFileUploaded(file) {
   reader.readAsText(file);
 }
 
+function joinRelativePath(filename: string): string {
+  if (!relativePath.value) {
+    return filename;
+  }
+  return `${relativePath.value}/${filename}`;
+}
+
+function splitPath(full: string): { path: string; name: string } {
+  const idx = full.lastIndexOf('/');
+  if (idx === -1) {
+    return { path: '', name: full };
+  }
+  return {
+    path: full.slice(0, idx),
+    name: full.slice(idx + 1),
+  };
+}
+
+function extractNameAndSetRelativePath(full: string): string {
+  if (!full) return full;
+  const { path, name } = splitPath(full);
+  if (path) {
+    relativePath.value = path;
+  }
+  return name;
+}
+
 function getTextureFromImagesFiles(name) {
-  if (name === defImage) {
+  const extractedName = extractNameAndSetRelativePath(name);
+  if (extractedName === defImage) {
     return getTextureFromImage({ url: defImage, name: defImage });
   }
-  const image = find(images.value, i => i.name === name);
+  const image = find(images.value, i => i.name === extractedName);
   if (image) {
     return getTextureFromImage(image);
   } else {
-    console.error(`cannot find texture for ${name}`);
+    console.error(`cannot find texture for ${extractedName}`);
   }
 }
 
