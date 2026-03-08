@@ -138,6 +138,21 @@
             class="col-md-2 col-sm-6 q-pr-md"
             square
           />
+          <q-input
+            v-model="bgColor"
+            label="background"
+            square
+            class="col-md-2 col-sm-6 q-pr-md"
+            @change="onBgColorChange"
+          >
+            <template v-slot:append>
+              <q-icon name="colorize" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-color v-model="bgColor" @change="onBgColorChange" />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
         </div>
       </div>
     </div>
@@ -330,8 +345,16 @@ const orbitRadius = ref(200); // r
 const orbitSpeed = ref(600);  // v
 let orbitUpdate;
 
+const bgColor = ref('#ffffff');
+
 const file = ref();
 const relativePath = ref('');
+
+function onBgColorChange() {
+  if (app) {
+    app.renderer.background.color = parseInt(bgColor.value.slice(1), 16);
+  }
+}
 
 const onResize = () => {
   if (app && pixiContainer.value) {
@@ -532,7 +555,7 @@ onMounted(() => {
     app = new PIXI.Application({
       width: pixiContainer.value.offsetWidth,
       height: 500,
-      backgroundColor: 0xffffff,
+      backgroundColor: parseInt(bgColor.value.slice(1), 16),
     });
 
     globalThis.__PIXI_APP__ = app;
@@ -660,7 +683,7 @@ onBeforeUnmount(() => {
 .particles-counter {
   position: absolute;
   top: 0;
-  left: 0
+  left: 0;
 }
 
 .file-buttons {
