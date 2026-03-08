@@ -5,8 +5,8 @@
       <div ref="pixiContainer" class="pixi-container">
         <div class="particles-counter">PARTICLES: {{ particleCount }}</div>
       </div>
-      <div class="row q-px-lg">
-        <div class="col-md-2 col-sm-6 q-pr-md">
+      <div class="row q-px-sm q-mt-sm">
+        <div class="col-md-2 col-sm-6 q-pr-sm">
           <q-input
             v-model.number="lifetimeMin"
             type="number"
@@ -22,7 +22,7 @@
             @change="particleEmitter.maxLifetime = lifetimeMax"
           ></q-input>
         </div>
-        <div class="col-md-2 col-sm-6 q-pr-md">
+        <div class="col-md-2 col-sm-6 q-pr-sm">
           <q-input
             v-model.number="posX"
             type="number"
@@ -38,7 +38,7 @@
             @change="particleEmitter.updateSpawnPos(posX, posY)"
           ></q-input>
         </div>
-        <div class="col-md-2 col-sm-6 q-pr-md">
+        <div class="col-md-2 col-sm-6 q-pr-sm">
           <q-input
             v-model.number="frequency"
             type="number"
@@ -53,8 +53,6 @@
             square
             @change="particleEmitter.spawnChance = spawnChance"
           ></q-input>
-        </div>
-        <div class="col-md-2 col-sm-6 q-pr-md">
           <q-input
             v-model.number="particlesPerWave"
             type="number"
@@ -62,6 +60,8 @@
             square
             @change="particleEmitter.particlesPerWave = particlesPerWave"
           ></q-input>
+        </div>
+        <div class="col-md-2 col-sm-6 q-pr-sm">
           <q-input
             v-model.number="emitterLifetime"
             type="number"
@@ -69,8 +69,6 @@
             square
             @change="particleEmitter.emitterLifetime = emitterLifetime"
           ></q-input>
-        </div>
-        <div class="col-md-2 col-sm-6">
           <q-input
             v-model.number="maxParticles"
             type="number"
@@ -84,33 +82,8 @@
             label="add at back"
             @update:model-value="particleEmitter.addAtBack= addAtBack"
           />
-
         </div>
-        <div class="col-md-2 col-sm-6 file-buttons q-pl-md">
-          <q-btn label="get json" color="primary" outline class="full-width" @click="downloadJson" />
-          <q-file
-            v-model="file"
-            class="full-width q-mt-sm"
-            outlined
-            label="LOAD"
-            accept=".json"
-            @update:model-value="onJsonFileUploaded"
-          >
-            <template v-slot:prepend>
-              <q-icon name="attach_file" />
-            </template>
-          </q-file>
-          <q-input
-            v-model="relativePath"
-            type="text"
-            label="relative path"
-            square
-            class="q-mt-sm"
-          ></q-input>
-        </div>
-      </div>
-      <div>
-        <div class="row q-px-lg">
+        <div class="col-md-2 col-sm-6">
           <q-select
             v-model="moveMode"
             :options="moveModeOptions"
@@ -153,6 +126,29 @@
               </q-icon>
             </template>
           </q-input>
+
+        </div>
+        <div class="col-md-2 col-sm-6 file-buttons">
+          <q-btn label="get json" color="primary" outline class="full-width" @click="downloadJson" />
+          <q-file
+            v-model="file"
+            class="full-width q-mt-sm"
+            outlined
+            label="LOAD"
+            accept=".json"
+            @update:model-value="onJsonFileUploaded"
+          >
+            <template v-slot:prepend>
+              <q-icon name="attach_file" />
+            </template>
+          </q-file>
+          <q-input
+            v-model="relativePath"
+            type="text"
+            label="relative path"
+            square
+            class="q-mt-sm"
+          ></q-input>
         </div>
       </div>
     </div>
@@ -675,7 +671,7 @@ onBeforeUnmount(() => {
 }
 
 .behavior__panel {
-  height: calc(100vh - 50px);
+  height: calc(100vh - 60px);
   max-height: 100vh;
   overflow-y: scroll;
 }
@@ -683,13 +679,12 @@ onBeforeUnmount(() => {
 .particles-counter {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 5px;
 }
 
 .file-buttons {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 </style>
 <style>

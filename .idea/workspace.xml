@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="add some ascii">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="claude + particles bg">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/Particles.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Particles.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +46,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
@@ -128,7 +127,7 @@
       <workItem from="1754771372787" duration="3613000" />
       <workItem from="1755111139212" duration="8803000" />
       <workItem from="1755182709777" duration="572000" />
-      <workItem from="1772969214554" duration="1221000" />
+      <workItem from="1772969214554" duration="3946000" />
     </task>
     <task id="LOCAL-00001" summary="add some ascii">
       <option name="closed" value="true" />
@@ -138,7 +137,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755122566959</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="claude + particles bg">
+      <option name="closed" value="true" />
+      <created>1772970629505</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1772970629505</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,6 +153,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add some ascii" />
-    <option name="LAST_COMMIT_MESSAGE" value="add some ascii" />
+    <MESSAGE value="claude + particles bg" />
+    <option name="LAST_COMMIT_MESSAGE" value="claude + particles bg" />
   </component>
 </project>
