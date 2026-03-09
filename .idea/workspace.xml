@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="claude + particles bg">
+    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="reorganize a bit particles UI">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/Particles.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Particles.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/images/font.webp" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/images/font.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/images/particles.webp" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/images/particles.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/images/spine.webp" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/images/spine.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/assets/images/spritesheet.webp" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/assets/images/spritesheet.webp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/IndexPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/IndexPage.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,12 +64,12 @@
     "npm.build.executor": "Run",
     "npm.dev.executor": "Run",
     "npm.start:dev.executor": "Run",
-    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "ts.external.directory.path": "E:\\programming\\projects\\AssetAlchemy\\client\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.build">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/client/package.json" />
       <command value="run" />
@@ -98,9 +102,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.start:dev" />
-        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
@@ -127,7 +131,7 @@
       <workItem from="1754771372787" duration="3613000" />
       <workItem from="1755111139212" duration="8803000" />
       <workItem from="1755182709777" duration="572000" />
-      <workItem from="1772969214554" duration="3946000" />
+      <workItem from="1772969214554" duration="7211000" />
     </task>
     <task id="LOCAL-00001" summary="add some ascii">
       <option name="closed" value="true" />
@@ -145,15 +149,35 @@
       <option name="project" value="LOCAL" />
       <updated>1772970629505</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="reorganize a bit particles UI">
+      <option name="closed" value="true" />
+      <created>1773010581287</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1773010581288</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add some ascii" />
     <MESSAGE value="claude + particles bg" />
-    <option name="LAST_COMMIT_MESSAGE" value="claude + particles bg" />
+    <MESSAGE value="reorganize a bit particles UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="reorganize a bit particles UI" />
   </component>
 </project>
