@@ -98,8 +98,8 @@ onUnmounted(() => {
     @dragover.prevent="setActive"
     @dragleave.prevent="setInactive"
   >
-    <div v-if="type ==='image'" class="images-uploader__body__label macondo-regular">Drag`n Drop Images Here</div>
-    <div v-else class="images-uploader__body__label macondo-regular">Drag`n Drop Files Here</div>
+    <div v-if="type ==='image'" class="images-uploader__body__label roboto-regular">Drag`n Drop Images Here</div>
+    <div v-else class="images-uploader__body__label roboto-regular">Drag`n Drop Files Here</div>
     <image-file v-for="fileImage of files" :file="fileImage" :key="fileImage.id" @remove="removeImage"></image-file>
   </div>
 </div>
@@ -109,7 +109,7 @@ onUnmounted(() => {
   .images-uploader__head{
     display: flex;
     flex-direction: row;
-    background-color: $secondary;
+    background-color: $primary;
   }
   .images-uploader__head_text{
     color: white;

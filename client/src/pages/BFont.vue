@@ -172,7 +172,7 @@ async function pack(){
 }
 
 .charmap__head {
-  background-color: $secondary;
+  background-color: $primary;
   color: white;
   padding: 5px;
   font-size: 14px;
