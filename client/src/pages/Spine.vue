@@ -2,14 +2,9 @@
   <div class="row">
     <div class="col-9">
       <images-uploader height="120px" @update="handleUpdate" title="SPINE RESOURCES" type="any" />
-
-      <div ref="pixiContainer" class="pixi-container">
-      </div>
-      <div class="row q-px-lg">
-
-      </div>
+      <div ref="pixiContainer" class="pixi-container"></div>
     </div>
-    <div class="col-3 behavior__panel q-pa-md" :key="panelkey">
+    <div class="col-3 behavior__panel q-pa-md">
       <div class="q-mb-md">VERSION: {{ version }}</div>
       <q-btn
         @click="loadData"
@@ -32,9 +27,11 @@
         :options="skins"
         class="q-mb-md"
         label="skin" />
-      <div>scale: {{ scale }}%</div>
+
+      <div class="text-weight-bold q-mb-xs">scale: {{ scale }}%</div>
       <q-slider v-model="scale" @update:model-value="setScale" :min="0" :max="100" />
-      <div class="row">
+
+      <div class="row q-mt-md">
         <div class="col-md-4">
           <q-btn @click="play" outline class="q-mr-sm">Play</q-btn>
         </div>
@@ -45,87 +42,184 @@
           <q-toggle v-model="loop" label="loop" />
         </div>
       </div>
-      <div class="q-mb-md">
-        duration: {{time.toFixed(2)}}s
+
+      <q-separator dark class="q-mt-sm q-mb-sm" />
+
+      <!-- Timeline -->
+      <div class="text-caption q-mb-xs">total duration: {{ time.toFixed(2) }}s</div>
+      <div class="text-weight-bold row items-center justify-between q-mb-xs">
+        <span>frame: {{ currentFrame }} / {{ totalFrames }}</span>
+        <span>{{ (timePlay / 100).toFixed(2) }}s</span>
       </div>
-      <q-slider v-model="timePlay" @update:model-value="updateAnimation" :min="0" :max="time*100" />
+      <q-slider v-model="timePlay" @update:model-value="updateAnimation" :min="0" :max="time * 100" />
+
+      <!-- Speed -->
+      <div class="text-weight-bold q-mt-sm q-mb-xs">speed: {{ speed.toFixed(1) }}x</div>
+      <q-slider
+        v-model="speed"
+        @update:model-value="setSpeed"
+        :min="0.1"
+        :max="3"
+        :step="0.1"
+      />
+
+      <!-- Background color -->
+      <div class="text-weight-bold q-mt-sm q-mb-xs">Background color</div>
+      <div class="row items-center q-gutter-sm">
+        <q-btn flat square padding="none" class="color-swatch" :style="{ background: bgColor }">
+          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+            <q-color v-model="bgColor" @update:model-value="onBgColorChange" no-header-tabs />
+          </q-popup-proxy>
+        </q-btn>
+        <span class="text-caption">{{ bgColor }}</span>
+      </div>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import * as PIXI from 'pixi.js';
+import { Assets } from 'pixi.js';
 import { IImageFile } from 'src/interfaces/imageFile';
 import ImagesUploader from 'components/imagesUploader.vue';
-import { find, forEach, map } from 'lodash';
-
-import { Assets } from 'pixi.js';
-import { Spine, TextureAtlas } from 'pixi-spine';
-import * as runtime_41 from '@pixi-spine/runtime-4.1';
-import * as runtime_40 from '@pixi-spine/runtime-4.0';
-import * as runtime_38 from '@pixi-spine/runtime-3.8';
-import * as runtime_37 from '@pixi-spine/runtime-3.7';
+import {
+  Spine,
+  SpineTexture,
+  TextureAtlas,
+  AtlasAttachmentLoader,
+  SkeletonJson,
+} from '@esotericsoftware/spine-pixi-v7';
 import { Notify } from 'quasar';
-
-let currentRuntime = runtime_37
 
 const pixiContainer = ref<HTMLDivElement | null>(null);
 let app: PIXI.Application | null = null;
-let images: Array<IImageFile> = ref([]);
-let panelkey = ref(0);
-const animations = ref([]);
-const animation = ref();
-const skins = ref([]);
-const skin = ref();
+
+const images = ref<Array<IImageFile>>([]);
+const animations = ref<string[]>([]);
+const animation = ref<string>('');
+const skins = ref<string[]>([]);
+const skin = ref<string>('');
 const loop = ref(false);
 const version = ref('');
 const scale = ref(100);
 const time = ref(0);
-
 const timePlay = ref(0);
+const speed = ref(1);
+const bgColor = ref('#1a1a2e');
 
-let spineJson, spineAtlas, spineTexture, spineComponent;
+const FPS = 30;
+const currentFrame = computed(() => Math.round(timePlay.value / 100 * FPS));
+const totalFrames = computed(() => Math.round(time.value * FPS));
 
-const file = ref();
+let spineComponent: Spine | null = null;
+
+// ─── drag ───────────────────────────────────────────────────────
+
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+let dragCleanup: (() => void) | null = null;
+
+function setupDrag() {
+  if (dragCleanup) dragCleanup();
+
+  const canvas = app!.view as HTMLCanvasElement;
+
+  const onPointerDown = (e: PointerEvent) => {
+    if (!spineComponent) return;
+    isDragging = true;
+    canvas.setPointerCapture(e.pointerId);
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    dragOffsetX = (e.clientX - rect.left) * scaleX - spineComponent.x;
+    dragOffsetY = (e.clientY - rect.top) * scaleY - spineComponent.y;
+    canvas.style.cursor = 'grabbing';
+  };
+
+  const onPointerMove = (e: PointerEvent) => {
+    if (!isDragging || !spineComponent) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    spineComponent.x = (e.clientX - rect.left) * scaleX - dragOffsetX;
+    spineComponent.y = (e.clientY - rect.top) * scaleY - dragOffsetY;
+  };
+
+  const onPointerUp = () => {
+    isDragging = false;
+    canvas.style.cursor = 'grab';
+  };
+
+  canvas.addEventListener('pointerdown', onPointerDown);
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('pointerup', onPointerUp);
+  canvas.addEventListener('pointercancel', onPointerUp);
+  canvas.style.cursor = 'grab';
+
+  dragCleanup = () => {
+    canvas.removeEventListener('pointerdown', onPointerDown);
+    canvas.removeEventListener('pointermove', onPointerMove);
+    canvas.removeEventListener('pointerup', onPointerUp);
+    canvas.removeEventListener('pointercancel', onPointerUp);
+    canvas.style.cursor = '';
+    isDragging = false;
+  };
+}
+
+// ─── helpers ────────────────────────────────────────────────────
+
+function readAsText(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target!.result as string);
+    reader.onerror = reject;
+    reader.readAsText(file);
+  });
+}
 
 const onResize = () => {
   if (app && pixiContainer.value) {
     app.renderer.resize(pixiContainer.value.offsetWidth, pixiContainer.value.offsetHeight);
-    if (spineComponent) {
-      spineComponent.position.set(app.screen.width / 2, app.screen.height / 2);
-    }
   }
 };
 
-function onAnimationSelect(){
-  if(!spineComponent) return;
-  const anim = spineComponent.spineData.findAnimation(animation.value);
-  time.value = anim.duration;
+// ─── controls ───────────────────────────────────────────────────
+
+function onAnimationSelect() {
+  if (!spineComponent || !animation.value) return;
+  const anim = spineComponent.skeleton.data.findAnimation(animation.value);
+  if (anim) time.value = anim.duration;
+  timePlay.value = 0;
 }
 
-
 function play() {
-  if (skin.value && spineComponent) {
+  if (!spineComponent) return;
+  // Disable first to avoid duplicate ticker registrations
+  spineComponent.autoUpdate = false;
+  if (skin.value) {
     spineComponent.skeleton.setSkin(null);
     spineComponent.skeleton.setSkinByName(skin.value);
     spineComponent.skeleton.setToSetupPose();
   }
+  spineComponent.state.timeScale = speed.value;
   spineComponent.state.setAnimation(0, animation.value, loop.value);
   spineComponent.autoUpdate = true;
 }
 
-function stop(){
-  if(!spineComponent) return;
-  spineComponent.state.clearTracks()
+function stop() {
+  if (!spineComponent) return;
+  spineComponent.state.clearTracks();
+  spineComponent.autoUpdate = false;
 }
 
-function updateAnimation(){
-  let time = timePlay.value/100;
-  spineComponent.state.setAnimation(0, animation.value, loop.value);
+function updateAnimation() {
+  if (!spineComponent) return;
   spineComponent.autoUpdate = false;
-  spineComponent.update(time)
+  spineComponent.state.timeScale = 1;
+  spineComponent.state.setAnimation(0, animation.value, false);
+  spineComponent.update(timePlay.value / 100);
 }
 
 function setScale() {
@@ -134,111 +228,117 @@ function setScale() {
   }
 }
 
+function setSpeed() {
+  if (spineComponent) {
+    spineComponent.state.timeScale = speed.value;
+  }
+}
+
+function onBgColorChange(hex: string) {
+  if (app) {
+    app.renderer.background.color = parseInt(hex.slice(1), 16);
+  }
+}
+
+// ─── load data ──────────────────────────────────────────────────
+
 async function loadData() {
-  for (let i = 0; i < images.value.length; i++) {
-    if (images.value[i].name.includes('json')) {
-      handleJson(images.value[i]);
-    } else if (images.value[i].name.includes('atlas')) {
-      handleAtlas(images.value[i]);
-    } else if (images.value[i].type.includes('image')) {
-      spineTexture = await Assets.load({ src: images.value[i].url, loadParser: 'loadTextures' });
-    }
+  const jsonFile = images.value.find((f) => f.name.endsWith('.json'));
+  const atlasFile = images.value.find((f) => f.name.endsWith('.atlas'));
+  const imageFiles = images.value.filter((f) => f.type.includes('image'));
+
+  if (!jsonFile || !atlasFile || imageFiles.length === 0) {
+    Notify.create('Потрібні файли: .json, .atlas і текстура(и) (png/jpg)');
+    return;
   }
 
-  const spineAtlasParser = new TextureAtlas(spineAtlas, (line, callback) => {
-    callback(spineTexture);
-  });
+  try {
+    const [jsonText, atlasText] = await Promise.all([
+      readAsText(jsonFile.file),
+      readAsText(atlasFile.file),
+    ]);
 
-  // Create a Spine loader
-  const spineAtlasLoader = new currentRuntime.AtlasAttachmentLoader(spineAtlasParser);
-  const spineJsonLoader = new currentRuntime.SkeletonJson(spineAtlasLoader);
+    const jsonData = JSON.parse(jsonText);
 
-  // Load the Skeleton data
-  const skeletonData = spineJsonLoader.readSkeletonData(spineJson);
+    // Update UI state from JSON
+    version.value = jsonData.skeleton?.spine ?? '';
+    animations.value = jsonData.animations ? Object.keys(jsonData.animations) : [];
+    animation.value = animations.value[0] ?? '';
+    skins.value = jsonData.skins ? jsonData.skins.map((s: { name: string }) => s.name) : [];
 
-  // Create the Spine animation
+    // Reset playback state
+    timePlay.value = 0;
 
-  if(spineComponent){
-    spineComponent.state.clearTracks();
-    app.stage.removeChild(spineComponent);
-  }
-  spineComponent = new Spine(skeletonData);
-  spineComponent.position.set(app.screen.width / 2, app.screen.height / 2);
-  scale.value = 100;
-  onAnimationSelect();
-  app.stage.addChild(spineComponent);
-}
+    // Load all textures in parallel, index by filename (lowercase)
+    const textureMap = new Map<string, PIXI.Texture>();
+    await Promise.all(
+      imageFiles.map(async (f) => {
+        const tex = await Assets.load({ src: f.url, loadParser: 'loadTextures' });
+        textureMap.set(f.name.toLowerCase(), tex);
+      })
+    );
 
-function handleJson(data: IImageFile) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    spineJson = JSON.parse(e.target.result);
-    if (spineJson.animations) {
-      animations.value = Object.keys(spineJson.animations);
-      animation.value = animations.value[0];
+    // Build TextureAtlas using new API
+    const atlas = new TextureAtlas(atlasText);
+
+    // Match each atlas page to the corresponding uploaded texture by filename
+    for (const page of atlas.pages) {
+      const pageName = page.name.split('/').pop()?.toLowerCase() ?? '';
+      const tex = textureMap.get(pageName) ?? textureMap.values().next().value;
+      if (tex) {
+        page.setTexture(SpineTexture.from(tex.baseTexture));
+      }
     }
-    if (spineJson.skins) {
-      skins.value = map(spineJson.skins, skin => skin.name);
-    }
-    version.value = spineJson.skeleton?.spine;
-    setRuntime();
-  };
-  reader.readAsText(data.file);
-}
 
-function setRuntime(){
-  const ver = extractVersion(version.value);
-  switch (ver){
-    case '3.7':
-      currentRuntime = runtime_37
-      break;
-    case '3.8':
-      currentRuntime = runtime_38
-      break;
-    case '4.0':
-      currentRuntime = runtime_40
-      break;
-    case '4.1':
-      currentRuntime = runtime_41
-      break;
-    default:
-        Notify.create(`Unsupported version: ${version.value}`);
+    // Build skeleton data
+    const atlasLoader = new AtlasAttachmentLoader(atlas);
+    const skeletonJsonLoader = new SkeletonJson(atlasLoader);
+    const skeletonData = skeletonJsonLoader.readSkeletonData(jsonData);
+
+    // Cleanup previous
+    if (spineComponent) {
+      spineComponent.state.clearTracks();
+      app?.stage.removeChild(spineComponent);
+      spineComponent.destroy();
+      spineComponent = null;
+    }
+
+    // Create and add new Spine object
+    spineComponent = new Spine({ skeletonData });
+    spineComponent.position.set(100, 100);
+    spineComponent.state.timeScale = speed.value;
+    scale.value = 100;
+    onAnimationSelect();
+    app!.stage.addChild(spineComponent);
+    setupDrag();
+  } catch (e) {
+    Notify.create(`Помилка завантаження: ${e}`);
   }
 }
 
-function extractVersion(inputString) {
-  const match = inputString.match(/^(\d+\.\d+)/);
-  return match ? match[1] : null;
-}
+// ─── uploader callback ──────────────────────────────────────────
 
-function handleAtlas(data: IImageFile) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    spineAtlas = e.target.result;
-  };
-  reader.readAsText(data.file);
-}
-
-function handleUpdate(data) {
+function handleUpdate(data: Array<IImageFile>) {
   images.value = data;
 }
+
+// ─── lifecycle ──────────────────────────────────────────────────
 
 onMounted(() => {
   if (pixiContainer.value) {
     app = new PIXI.Application({
       width: pixiContainer.value.offsetWidth,
       height: 600,
-      backgroundColor: 0xffffff,
+      backgroundColor: 0x1a1a2e,
     });
     globalThis.__PIXI_APP__ = app;
     pixiContainer.value.appendChild(app.view);
-
-    // Add resize event listener
     window.addEventListener('resize', onResize);
   }
 });
 
 onBeforeUnmount(() => {
+  if (dragCleanup) dragCleanup();
   if (app) {
     app.destroy(true, { children: true });
     app = null;
@@ -255,8 +355,16 @@ onBeforeUnmount(() => {
 }
 
 .behavior__panel {
-  height: calc(100vh - 50px);
+  height: calc(100vh - 60px);
   max-height: 100vh;
   overflow-y: scroll;
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>

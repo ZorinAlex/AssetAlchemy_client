@@ -10,6 +10,7 @@
 
 
 const { configure } = require('quasar/wrappers');
+const path = require('path');
 
 
 module.exports = configure(function (/* ctx */) {
@@ -67,7 +68,13 @@ module.exports = configure(function (/* ctx */) {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf (viteConf) {
+        viteConf.resolve = viteConf.resolve || {};
+        viteConf.resolve.alias = {
+          ...(viteConf.resolve.alias || {}),
+          url: path.resolve(__dirname, 'src/shims/url.js'),
+        };
+      },
       // viteVuePluginOptions: {},
 
 
