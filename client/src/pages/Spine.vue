@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-9">
+  <div class="row spine-row">
+    <div class="col-9 column">
       <images-uploader height="120px" @update="handleUpdate" title="SPINE RESOURCES" type="any" />
       <div ref="pixiContainer" class="pixi-container"></div>
     </div>
@@ -179,11 +179,7 @@ function readAsText(file: File): Promise<string> {
   });
 }
 
-const onResize = () => {
-  if (app && pixiContainer.value) {
-    app.renderer.resize(pixiContainer.value.offsetWidth, pixiContainer.value.offsetHeight);
-  }
-};
+let resizeObserver: ResizeObserver | null = null;
 
 // ─── controls ───────────────────────────────────────────────────
 
@@ -328,30 +324,49 @@ onMounted(() => {
   if (pixiContainer.value) {
     app = new PIXI.Application({
       width: pixiContainer.value.offsetWidth,
-      height: 600,
+      height: pixiContainer.value.offsetHeight,
       backgroundColor: 0x1a1a2e,
     });
     globalThis.__PIXI_APP__ = app;
     pixiContainer.value.appendChild(app.view);
-    window.addEventListener('resize', onResize);
+
+    resizeObserver = new ResizeObserver((entries) => {
+      if (!app) return;
+      const { width, height } = entries[0].contentRect;
+      app.renderer.resize(Math.floor(width), Math.floor(height));
+    });
+    resizeObserver.observe(pixiContainer.value);
   }
 });
 
 onBeforeUnmount(() => {
   if (dragCleanup) dragCleanup();
+  resizeObserver?.disconnect();
+  resizeObserver = null;
   if (app) {
     app.destroy(true, { children: true });
     app = null;
   }
-  window.removeEventListener('resize', onResize);
 });
 </script>
 
 <style scoped>
+.spine-row {
+  height: calc(100vh - 60px);
+}
+
 .pixi-container {
   width: 100%;
-  height: 600px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   position: relative;
+}
+
+.pixi-container :deep(canvas) {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .behavior__panel {
