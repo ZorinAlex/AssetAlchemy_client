@@ -17,6 +17,8 @@
       return 'SPINE.png'
     }else if(file.name.includes('atlas')){
       return 'ATLAS.png'
+    }else if(file.name.endsWith('.skel')){
+      return 'SKEL.png'
     }else{
       return 'FILE.png'
     }

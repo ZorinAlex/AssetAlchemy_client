@@ -89,6 +89,7 @@ import {
   TextureAtlas,
   AtlasAttachmentLoader,
   SkeletonJson,
+  SkeletonBinary,
 } from '@esotericsoftware/spine-pixi-v7';
 import { Notify } from 'quasar';
 
@@ -179,6 +180,15 @@ function readAsText(file: File): Promise<string> {
   });
 }
 
+function readAsArrayBuffer(file: File): Promise<ArrayBuffer> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target!.result as ArrayBuffer);
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 let resizeObserver: ResizeObserver | null = null;
 
 // ─── controls ───────────────────────────────────────────────────
@@ -240,27 +250,18 @@ function onBgColorChange(hex: string) {
 
 async function loadData() {
   const jsonFile = images.value.find((f) => f.name.endsWith('.json'));
+  const skelFile = images.value.find((f) => f.name.endsWith('.skel'));
+  const skelInput = jsonFile ?? skelFile;
   const atlasFile = images.value.find((f) => f.name.endsWith('.atlas'));
   const imageFiles = images.value.filter((f) => f.type.includes('image'));
 
-  if (!jsonFile || !atlasFile || imageFiles.length === 0) {
-    Notify.create('Потрібні файли: .json, .atlas і текстура(и) (png/jpg)');
+  if (!skelInput || !atlasFile || imageFiles.length === 0) {
+    Notify.create('Потрібні файли: .json або .skel, .atlas і текстура(и) (png/jpg)');
     return;
   }
 
   try {
-    const [jsonText, atlasText] = await Promise.all([
-      readAsText(jsonFile.file),
-      readAsText(atlasFile.file),
-    ]);
-
-    const jsonData = JSON.parse(jsonText);
-
-    // Update UI state from JSON
-    version.value = jsonData.skeleton?.spine ?? '';
-    animations.value = jsonData.animations ? Object.keys(jsonData.animations) : [];
-    animation.value = animations.value[0] ?? '';
-    skins.value = jsonData.skins ? jsonData.skins.map((s: { name: string }) => s.name) : [];
+    const atlasText = await readAsText(atlasFile.file);
 
     // Reset playback state
     timePlay.value = 0;
@@ -286,10 +287,23 @@ async function loadData() {
       }
     }
 
-    // Build skeleton data
+    // Build skeleton data — JSON or binary
     const atlasLoader = new AtlasAttachmentLoader(atlas);
-    const skeletonJsonLoader = new SkeletonJson(atlasLoader);
-    const skeletonData = skeletonJsonLoader.readSkeletonData(jsonData);
+    let skeletonData;
+    if (jsonFile) {
+      const jsonText = await readAsText(jsonFile.file);
+      const jsonData = JSON.parse(jsonText);
+      version.value = jsonData.skeleton?.spine ?? '';
+      skeletonData = new SkeletonJson(atlasLoader).readSkeletonData(jsonData);
+    } else {
+      const buffer = await readAsArrayBuffer(skelFile!.file);
+      skeletonData = new SkeletonBinary(atlasLoader).readSkeletonData(new Uint8Array(buffer));
+      version.value = skeletonData.version ?? '';
+    }
+
+    animations.value = skeletonData.animations.map((a: { name: string }) => a.name);
+    animation.value = animations.value[0] ?? '';
+    skins.value = skeletonData.skins.map((s: { name: string }) => s.name);
 
     // Cleanup previous
     if (spineComponent) {

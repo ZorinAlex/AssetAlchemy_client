@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="spine page update">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/imageFile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/imageFile.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/Spine.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Spine.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -127,7 +129,8 @@
       <workItem from="1755111139212" duration="8803000" />
       <workItem from="1755182709777" duration="572000" />
       <workItem from="1772969214554" duration="9151000" />
-      <workItem from="1773176325064" duration="3626000" />
+      <workItem from="1773176325064" duration="4125000" />
+      <workItem from="1773225543144" duration="1397000" />
     </task>
     <task id="LOCAL-00001" summary="add some ascii">
       <option name="closed" value="true" />
@@ -177,7 +180,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773180598847</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="spine page update">
+      <option name="closed" value="true" />
+      <created>1773181310974</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1773181310974</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
