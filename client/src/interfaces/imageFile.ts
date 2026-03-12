@@ -6,9 +6,14 @@ export interface IImageFile {
   file: File
 }
 
-export interface IImageChar{
+export interface IImageChar {
   image: IImageFile,
-  char: string
+  char: string,
+  width: number,
+  height: number,
+  xoffset: number,
+  yoffset: number,
+  xadvance: number,
 }
 
 export interface IBehaviorUpdate{

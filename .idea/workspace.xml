@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="spine page update">
+    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="spine skel format support">
+      <change afterPath="$PROJECT_DIR$/client/src/components/CharEditor.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/components/FontPreview.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/imageFile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/imageFile.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/Spine.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/Spine.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/boot/axios.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/boot/axios.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/interfaces/imageFile.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/interfaces/imageFile.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/BFont.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/BFont.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/packer/bitmap.font.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/bitmap.font.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.interfaces.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.interfaces.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +73,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.start:dev">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/client/package.json" />
       <command value="run" />
@@ -99,9 +106,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.start:dev" />
         <item itemvalue="npm.dev" />
         <item itemvalue="npm.build" />
-        <item itemvalue="npm.start:dev" />
       </list>
     </recent_temporary>
   </component>
@@ -130,7 +137,8 @@
       <workItem from="1755182709777" duration="572000" />
       <workItem from="1772969214554" duration="9151000" />
       <workItem from="1773176325064" duration="4125000" />
-      <workItem from="1773225543144" duration="1397000" />
+      <workItem from="1773225543144" duration="3441000" />
+      <workItem from="1773265368232" duration="5220000" />
     </task>
     <task id="LOCAL-00001" summary="add some ascii">
       <option name="closed" value="true" />
@@ -188,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773181310974</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="spine skel format support">
+      <option name="closed" value="true" />
+      <created>1773226984709</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1773226984709</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,6 +228,7 @@
     <MESSAGE value="main page redesign" />
     <MESSAGE value="redesign" />
     <MESSAGE value="spine page update" />
-    <option name="LAST_COMMIT_MESSAGE" value="spine page update" />
+    <MESSAGE value="spine skel format support" />
+    <option name="LAST_COMMIT_MESSAGE" value="spine skel format support" />
   </component>
 </project>
