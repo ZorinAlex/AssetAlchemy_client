@@ -4,17 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="spine skel format support">
-      <change afterPath="$PROJECT_DIR$/client/src/components/CharEditor.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/components/FontPreview.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="28f200b3-ed16-4053-86bf-36d7033a8c8a" name="Changes" comment="bitmap font tool update">
       <change beforePath="$PROJECT_DIR$/client/src/boot/axios.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/boot/axios.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/interfaces/imageFile.ts" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/interfaces/imageFile.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/BFont.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/BFont.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/packer/bitmap.font.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/bitmap.font.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.interfaces.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.interfaces.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/packer/packer.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/packer/packer.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/CharEditor.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/CharEditor.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +130,7 @@
       <workItem from="1772969214554" duration="9151000" />
       <workItem from="1773176325064" duration="4125000" />
       <workItem from="1773225543144" duration="3441000" />
-      <workItem from="1773265368232" duration="5220000" />
+      <workItem from="1773265368232" duration="5872000" />
     </task>
     <task id="LOCAL-00001" summary="add some ascii">
       <option name="closed" value="true" />
@@ -204,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773226984709</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="bitmap font tool update">
+      <option name="closed" value="true" />
+      <created>1773328872308</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1773328872308</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,6 +229,7 @@
     <MESSAGE value="redesign" />
     <MESSAGE value="spine page update" />
     <MESSAGE value="spine skel format support" />
-    <option name="LAST_COMMIT_MESSAGE" value="spine skel format support" />
+    <MESSAGE value="bitmap font tool update" />
+    <option name="LAST_COMMIT_MESSAGE" value="bitmap font tool update" />
   </component>
 </project>

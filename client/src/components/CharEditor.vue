@@ -25,18 +25,18 @@ const GUIDES = [
 
 function guidePos(key: string, char: IImageChar) {
   switch (key) {
-    case 'xoffset':  return PAD - char.xoffset;   // inverted: guide left = positive xoffset
+    case 'xoffset':  return PAD - char.xoffset;
     case 'xadvance': return PAD + char.xadvance;
-    case 'yoffset':  return PAD + char.yoffset;
+    case 'yoffset':  return PAD - char.yoffset;  // inverted: guide up = positive yoffset
     default:         return 0;
   }
 }
 
 function applyDrag(key: string, px: number, char: IImageChar) {
   switch (key) {
-    case 'xoffset':  char.xoffset  = Math.round(PAD - px); break;  // inverted
+    case 'xoffset':  char.xoffset  = Math.round(PAD - px); break;
     case 'xadvance': char.xadvance = Math.max(1, Math.round(px - PAD)); break;
-    case 'yoffset':  char.yoffset  = Math.round(px - PAD); break;
+    case 'yoffset':  char.yoffset  = Math.round(PAD - px); break;  // inverted
   }
 }
 
@@ -53,16 +53,8 @@ function drawEditor() {
   canvas.width  = Math.max(PAD + Math.max(iw, char.xadvance) + PAD, 320);
   canvas.height = Math.max(PAD + ih + PAD, 200);
 
-  // Checkerboard
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const tile = 12;
-  ctx.fillStyle = '#d4d4d4';
-  for (let r = 0; r < Math.ceil(canvas.height / tile); r++) {
-    for (let c = (r % 2); c < Math.ceil(canvas.width / tile); c += 2) {
-      ctx.fillRect(c * tile, r * tile, tile, tile);
-    }
-  }
+  // Transparent canvas — checkerboard comes from CSS on the wrapper
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.drawImage(editorImg, PAD, PAD, iw, ih);
 
@@ -96,7 +88,7 @@ function drawEditor() {
   }
 
   ctx.save();
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#555';
   ctx.beginPath();
   ctx.arc(PAD, PAD, 4, 0, Math.PI * 2);
   ctx.fill();
@@ -116,13 +108,11 @@ function onCanvasPointerDown(e: MouseEvent) {
   if (!props.char) return;
   const { mx, my } = canvasCoords(e);
   const HIT = 8;
-
   for (const g of GUIDES) {
     const pos = guidePos(g.key, props.char);
     const dist = g.axis === 'v' ? Math.abs(mx - pos) : Math.abs(my - pos);
     if (dist < HIT) { dragging = g.key; break; }
   }
-
   if (dragging) {
     window.addEventListener('mousemove', onWindowMouseMove);
     window.addEventListener('mouseup',   onWindowMouseUp);
@@ -150,7 +140,6 @@ function onCanvasMouseMove(e: MouseEvent) {
   if (!canvas || !props.char) return;
   const { mx, my } = canvasCoords(e);
   const HIT = 8;
-
   let cursor = 'default';
   for (const g of GUIDES) {
     const pos = guidePos(g.key, props.char);
@@ -181,76 +170,67 @@ function onHide() {
 <template>
   <q-dialog :model-value="modelValue" @show="onShow" @hide="onHide">
     <q-card class="editor-card">
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">
-          Edit char: <strong>{{ char?.char }}</strong>
-          <span class="text-caption q-ml-sm text-grey-6">{{ char?.image.name }}</span>
+
+      <!-- Header -->
+      <div class="editor-head">
+        <div class="editor-head__char">{{ char?.char || '?' }}</div>
+        <div class="editor-head__meta">
+          <div class="editor-head__filename">{{ char?.image.name }}</div>
+          <div class="editor-head__dims" v-if="char">{{ char.width }} × {{ char.height }} px</div>
         </div>
         <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
+        <q-btn icon="close" flat round dense color="white" v-close-popup />
+      </div>
 
-      <q-card-section>
-        <!-- Legend with live values -->
-        <div class="editor-legend q-mb-sm" v-if="char">
-          <span
-            v-for="g in [
-              { key: 'xoffset',  color: '#2196f3' },
-              { key: 'xadvance', color: '#ff9800' },
-              { key: 'yoffset',  color: '#4caf50' },
-            ]"
-            :key="g.key"
-            class="editor-legend__item"
-          >
-            <span class="editor-legend__dot" :style="{ background: g.color }" />
-            <span class="editor-legend__label">{{ g.key }}:</span>
-            <strong>{{ (char as any)[g.key] }}</strong>
-          </span>
+      <!-- Legend: live guide values as chips -->
+      <div class="editor-legend" v-if="char">
+        <div
+          v-for="g in [
+            { key: 'xoffset',  color: '#2196f3' },
+            { key: 'xadvance', color: '#ff9800' },
+            { key: 'yoffset',  color: '#4caf50' },
+          ]"
+          :key="g.key"
+          class="editor-legend__chip"
+        >
+          <span class="editor-legend__swatch" :style="{ background: g.color }" />
+          <span class="editor-legend__key">{{ g.key }}</span>
+          <span class="editor-legend__val">{{ (char as any)[g.key] }}</span>
         </div>
+      </div>
 
-        <!-- Canvas -->
-        <div class="editor-canvas-wrap">
-          <canvas
-            ref="editorCanvas"
-            class="editor-canvas"
-            @mousedown="onCanvasPointerDown"
-            @mousemove="onCanvasMouseMove"
-          />
-        </div>
+      <!-- Canvas -->
+      <div class="editor-canvas-wrap">
+        <canvas
+          ref="editorCanvas"
+          class="editor-canvas"
+          @mousedown="onCanvasPointerDown"
+          @mousemove="onCanvasMouseMove"
+        />
+      </div>
 
-        <!-- Inputs: width / height / char -->
-        <div class="editor-values q-mt-sm" v-if="char">
-          <div class="editor-values__item">
-            <span class="editor-values__label">width:</span>
-            <q-input
-              v-model.number="char.width"
-              type="number"
-              dense outlined
-              style="width: 72px; margin-left: 4px"
-              @update:model-value="drawEditor(); emit('change')"
-            />
-          </div>
-          <div class="editor-values__item">
-            <span class="editor-values__label">height:</span>
-            <q-input
-              v-model.number="char.height"
-              type="number"
-              dense outlined
-              style="width: 72px; margin-left: 4px"
-              @update:model-value="drawEditor(); emit('change')"
-            />
-          </div>
-          <div class="editor-values__item">
-            <span class="editor-values__label">char:</span>
-            <q-input
-              v-model="char.char"
-              dense outlined
-              style="width: 60px; margin-left: 4px"
-              maxlength="2"
-            />
-          </div>
-        </div>
-      </q-card-section>
+      <!-- Bottom inputs -->
+      <div class="editor-footer" v-if="char">
+        <q-input
+          v-model.number="char.width"
+          type="number" dense outlined label="width"
+          class="editor-footer__field"
+          @update:model-value="drawEditor(); emit('change')"
+        />
+        <q-input
+          v-model.number="char.height"
+          type="number" dense outlined label="height"
+          class="editor-footer__field"
+          @update:model-value="drawEditor(); emit('change')"
+        />
+        <q-input
+          v-model="char.char"
+          dense outlined label="char"
+          class="editor-footer__field editor-footer__field--char"
+          maxlength="2"
+        />
+      </div>
+
     </q-card>
   </q-dialog>
 </template>
@@ -258,72 +238,127 @@ function onHide() {
 <style scoped lang="scss">
 .editor-card {
   width: auto;
-  min-width: 320px;
-  max-width: 90vw;
+  min-width: 340px;
+  max-width: 92vw;
+  border-radius: 10px !important;
+  overflow: hidden;
 }
 
+// ── Header ────────────────────────────────────────────────────────────────────
+.editor-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1e1e2e;
+  color: #fff;
+  padding: 10px 14px 10px 12px;
+
+  &__char {
+    font-size: 26px;
+    font-weight: 700;
+    font-family: monospace;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    padding: 5px 12px;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__filename {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  &__dims {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: monospace;
+  }
+}
+
+// ── Legend ────────────────────────────────────────────────────────────────────
 .editor-legend {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f4f4f6;
+  border-bottom: 1px solid #e4e4e8;
 
-  &__item {
+  &__chip {
     display: flex;
     align-items: center;
     gap: 5px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 3px 10px 3px 7px;
     font-size: 12px;
     font-family: monospace;
   }
 
-  &__dot {
-    width: 12px;
-    height: 12px;
+  &__swatch {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
   }
 
-  &__label {
-    color: #555;
+  &__key {
+    color: #999;
+  }
+
+  &__val {
+    font-weight: 700;
+    color: #222;
+    min-width: 18px;
   }
 }
 
+// ── Canvas ────────────────────────────────────────────────────────────────────
 .editor-canvas-wrap {
   overflow: auto;
   max-height: 55vh;
-  border: 1px solid #e0e0e0;
-  background: #fff;
+  // CSS checkerboard — covers the full wrap regardless of canvas size
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
 }
 
 .editor-canvas {
   display: block;
   image-rendering: pixelated;
   cursor: default;
-  max-width: 100%;
+  // transparent so CSS checkerboard shows through everywhere
 }
 
-.editor-values {
+// ── Footer inputs ─────────────────────────────────────────────────────────────
+.editor-footer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
   align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fafafa;
+  border-top: 1px solid #ebebeb;
 
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 13px;
-    font-family: monospace;
-  }
+  &__field {
+    width: 82px;
 
-  &__dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  &__label {
-    color: #666;
+    &--char {
+      width: 64px;
+    }
   }
 }
 </style>

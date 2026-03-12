@@ -15,6 +15,7 @@ declare module 'vue' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({ baseURL: 'https://api.assetalchemy.app' });
+// const api = axios.create({ baseURL: 'http://localhost:3100' });
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
